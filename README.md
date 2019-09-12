@@ -25,10 +25,7 @@ SourceQuery -> 與服務器進行Udp連線交換資料，改寫自 https://githu
 ## 要如何發行可執行軟件?
 1. 發行 ARKServerQuery、ARKWatchdog  
 2. 在欲存放軟件之地點新增bin資料夾  
-3. ARKServerQuery發行目錄下的以下檔案放到./
-> ARKServerQuery.exe
-> ICSharpCode.SharpZipLib.dll  
-> SourceQuery.dll  
+3. ARKServerQuery發行目錄下的ARKServerQuery.exe放到./  
 4. ARKWatchDog發行目錄下的以下檔案放到./bin  
 > ARKWatchdog.exe  
 > ICSharpCode.SharpZipLib.dll  
@@ -43,6 +40,4 @@ SourceQuery -> 與服務器進行Udp連線交換資料，改寫自 https://githu
 │ ├─ICSharpCode.SharpZipLib.dll  
 │ ├─ServerList.txt  
 │ └─SourceQuery.dll  
-├─ARKServerQuery.exe  
-├─ICSharpCode.SharpZipLib.dll  
-└─SourceQuery.dll  
+└─ARKServerQuery.exe  
