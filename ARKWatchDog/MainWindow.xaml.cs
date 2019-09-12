@@ -210,7 +210,7 @@ namespace ARKWatchdog
                             }
                             else
                             {
-                                serverContent = name + "\n服務器離線中 !";
+                                serverContent = name + "\n服務器訪問失敗，或許是離線中 !\n";
                                 foregroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
                                 shadowColor = (Color)ColorConverter.ConvertFromString("#FF000000"); // 黑
                             }
