@@ -6,9 +6,11 @@ ARKWatchDog -> 服務器監控介面
 ServerListGen -> 由官方服務器列表生成可供查詢介面查詢之文字檔(ServerList.txt)  
 SourceQuery -> 與服務器進行Udp連線交換資料，改寫自 https://github.com/brycekahle/source-query-net/  
 
+
 ## 撰寫環境
 > Visual studio 2019  
 > .Net Framework 4.7.2
+
 
 ## 要如何正常的偵錯ARKServerQuery?
 1. 建置 ARKServerQuery、ARKWatchdog  
@@ -18,6 +20,7 @@ SourceQuery -> 與服務器進行Udp連線交換資料，改寫自 https://githu
 > ICSharpCode.SharpZipLib.dll  
 > SourceQuery.dll  
 4. ServerList.txt自行生成後放到./bin  
+
 
 ## 要如何發行可執行軟件?
 1. 發行 ARKServerQuery、ARKWatchdog  
@@ -31,6 +34,7 @@ SourceQuery -> 與服務器進行Udp連線交換資料，改寫自 https://githu
 > ICSharpCode.SharpZipLib.dll  
 > SourceQuery.dll  
 5. ServerList.txt自行生成後放到./bin  
+
 
 ### 檔案樹
 . /  

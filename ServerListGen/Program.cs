@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ServerListGen
 {
@@ -27,6 +26,7 @@ namespace ServerListGen
 
         static void Main(string[] args)
         {
+            Console.WriteLine("該專案用於生成最新的官服列表，大約需要半分鐘的時間..案下Enter開始");
             Console.Read();
             
             string[] port = new string[4] { "27015", "27017", "27019", "27021" };
