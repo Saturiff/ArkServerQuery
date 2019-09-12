@@ -63,7 +63,7 @@ namespace ARKServerQuery
             if (!WatchdogOnline())
             {
                 LocalServer.serverTread.Start();
-                Process.Start(@"bin\ARKWatchDog.exe");
+                Process.Start(@"bin\ARKWatchdog.exe");
                 Thread.Sleep(1000);
             }
             object watchdogStr = ((Button)sender).CommandParameter;
@@ -80,7 +80,7 @@ namespace ARKServerQuery
         // 檢測監控介面是否存在
         private bool WatchdogOnline()
         {
-            Process[] processes = Process.GetProcessesByName("ARKWatchDog");
+            Process[] processes = Process.GetProcessesByName("ARKWatchdog");
             return processes.Length > 0;
         }
 
@@ -101,7 +101,7 @@ namespace ARKServerQuery
 
         private void ClickExit(object sender, RoutedEventArgs e)
         {
-            Process[] processes = Process.GetProcessesByName("ARKWatchDog");
+            Process[] processes = Process.GetProcessesByName("ARKWatchdog");
             foreach(var p in processes)
             {
                 p.WaitForExit(1000);

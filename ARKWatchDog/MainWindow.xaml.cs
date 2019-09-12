@@ -16,7 +16,7 @@ using System.Windows.Media.Effects;
 using ThreadState = System.Threading.ThreadState;
 using Timer = System.Windows.Forms.Timer;
 
-namespace ARKWatchDog
+namespace ARKWatchdog
 {
     public static class WindowsServices // 讓鼠標忽略該軟件
     {
