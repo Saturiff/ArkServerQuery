@@ -1,4 +1,4 @@
-# ArkServerQuery
+# ArkServerQuery 方舟服務器查詢
 
 ## 專案
 ARKServerQuery -> 服務器查詢介面，與監控介面進行交互  
