@@ -1,0 +1,63 @@
+﻿<Window x:Class="ARKServerQuery.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ARKServerQuery"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        Background="Transparent" 
+        AllowsTransparency="True"
+        Title="" Width="707.999" Height="305.65" ResizeMode="NoResize">
+
+    <Grid MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" Background="#02000000">
+        <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0" >
+            <WrapPanel Margin="0,0,0,200" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Label Content="輸入服務器名稱或IP位址 : " FontSize="18" Foreground="White"/>
+                <TextBox x:Name="TB_ServerID" TextWrapping="Wrap" Width="222" Background="Transparent" BorderBrush="White" Foreground="White" SelectionBrush="White" FontSize="20" TextChanged="TB_ServerID_TextChanged"/>
+                <Button x:Name="B_Tips" Content="?" 
+                    Background="#02FFFFFF" Foreground="White" 
+                    MouseEnter="ClickShowButton" MouseLeave="ClickHideButton" Click="ClickTips" Margin="20,0,0,0" Width="25" BorderBrush="White" Height="25"/>
+            </WrapPanel>
+            <WrapPanel Margin="0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Button x:Name="Min_button" Content="—" Height="20" Width="20" 
+                Background="#02FFFFFF" Foreground="#FF9B9B9B" 
+                MouseEnter="ClickShowButton" MouseLeave="ClickHideButton" Click="ClickMin"/>
+                <Button x:Name="Close_button" Content="X" Height="20" Width="20" 
+                Background="#02FFFFFF" Foreground="#FF9B9B9B" 
+                MouseEnter="ClickShowButton" MouseLeave="ClickHideButton" Click="ClickExit" />
+            </WrapPanel>
+            <WrapPanel HorizontalAlignment="Left" Margin="409,235,0,0" VerticalAlignment="Top"/>
+            <WrapPanel HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Orientation="Vertical">
+                <DataGrid x:Name="DG_ServerList" Height="126" VerticalAlignment="Center" Width="608" FontSize="16" Background="#00545374" Foreground="Black" HorizontalGridLinesBrush="White" VerticalGridLinesBrush="White" HorizontalAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="false" FontWeight="Bold" BorderBrush="#00000000">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="" Width="45">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="ToggleServerWatchdog" CommandParameter="{Binding watchdogString}" Content="監控"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="名稱" Binding="{Binding name}" Width="370" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="人數" Binding="{Binding currentPlayer}" Width="45" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="" Binding="{Binding dgMaxPlayer}" Width="60" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Width="40" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="JoinServer" CommandParameter="{Binding watchdogString}" Content="加入"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </WrapPanel>
+            <Label x:Name="Lable_Tips" HorizontalAlignment="Left" Margin="56,217,0,0" VerticalAlignment="Top" Foreground="White" Visibility="Hidden"/>
+            <WrapPanel x:Name="WP_BottomButtonWarp" HorizontalAlignment="Left" Margin="31,235,0,0" VerticalAlignment="Top">
+                <Button x:Name="B_WatchVisibility" Content="隱藏監控" HorizontalAlignment="Center" Click="ClickWatchVisibility" Background="#00DDDDDD" BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Margin="0" Width="100"/>
+                <Button x:Name="B_DisableAllWatch" Content="取消監控" HorizontalAlignment="Center" Click="ClickDisableAllWatch" Background="#00DDDDDD" BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Width="100" Margin="50,0,0,0"/>
+                <Button x:Name="B_Start_Load" Content="全部查詢" HorizontalAlignment="Center" Click="ClickStartSearchAll" Background="#00DDDDDD" BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Width="136" Margin="100,0,0,0"/>
+                <Button x:Name="B_Stop_Load" Content="停止查詢" HorizontalAlignment="Center" Width="104" Click="ClickStopSearchAll" Background="#00DDDDDD" BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" IsEnabled="False" Margin="50,0,0,0"/>
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</Window>

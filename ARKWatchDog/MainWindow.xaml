@@ -1,0 +1,12 @@
+﻿<Window x:Name="W_WatchdogWindow" x:Class="ARKWatchDog.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ARKWatchDog"
+        mc:Ignorable="d"
+        WindowStyle="None" 
+        AllowsTransparency="True"
+        ResizeMode="NoResize"
+        Title="" Topmost="True" Height="auto" Width="auto" Background="#00000000" HorizontalAlignment="Left" VerticalAlignment="Top" ShowInTaskbar="False">
+</Window>
