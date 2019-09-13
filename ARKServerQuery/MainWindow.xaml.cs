@@ -74,11 +74,7 @@ namespace ARKServerQuery
         }
 
         // 檢測監控介面是否存在
-        private bool WatchdogOnline()
-        {
-            Process[] processes = Process.GetProcessesByName("ARKWatchdog");
-            return processes.Length > 0;
-        }
+        private bool WatchdogOnline() => Process.GetProcessesByName("ARKWatchdog").Length > 0;
 
         // 對搜尋狀態做按鈕的調整
         private void IsSearching(bool b)

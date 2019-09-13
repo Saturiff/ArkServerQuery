@@ -24,7 +24,6 @@ namespace SourceQuery
         public string Name;
         public byte MaximumPlayerCount;
         public bool _bool;
-        public short Port = 27015;
         public string GameTagData;
         public bool ConnectStatus = true;
 
@@ -60,7 +59,11 @@ namespace SourceQuery
             _client = null;
         }
 
-        public int GetCurrentPlayer() { return Convert.ToInt16(MaximumPlayerCount) - Convert.ToInt16(GameTagData.Split(',')[3].Split(':')[1]); }
+        public int GetCurrentPlayer()
+        {
+            return Convert.ToInt16(MaximumPlayerCount) - Convert.ToInt16(GameTagData.Split(',')[3].Split(':')[1]);
+        }
+
         public string GetFixedServerName() { return Name.Split(' ')[0]; }
 
         public void RefreshMainInfo()
@@ -69,33 +72,33 @@ namespace SourceQuery
             var infoData = Receive();
             using (var br = new BinaryReader(new MemoryStream(infoData)))
             {
-                br.ReadByte(); // type byte, not needed
+                br.ReadByte();                                                                  // - type byte, not needed
+                
+                br.ReadByte();                                                                  // - Protocol Version
+                Name = br.ReadAnsiString();                                                     // + Server Name
+                br.ReadAnsiString();                                                            // - Map
+                br.ReadAnsiString();                                                            // - Folder
+                br.ReadAnsiString();                                                            // - Game
+                br.ReadInt16();                                                                 // - AppID
+                br.ReadByte();                                                                  // - Player Count
+                MaximumPlayerCount = br.ReadByte();                                             // + Max Players
+                br.ReadByte();                                                                  // - Bot Count
+                br.ReadByte();                                                                  // - Server Type
+                br.ReadByte();                                                                  // - Platform
+                _bool = br.ReadByte() == 0x01;                                                  // - Is Private
+                _bool = br.ReadByte() == 0x01;                                                  // - Have VAC
+                br.ReadAnsiString();                                                            // - Version
+                var edf = (ExtraDataFlags)br.ReadByte();                                        // - Extra Data Flag
 
-                br.ReadByte();
-                Name = br.ReadAnsiString();
-                br.ReadAnsiString();
-                br.ReadAnsiString();
-                br.ReadAnsiString();
-                br.ReadInt16();
-                br.ReadByte();
-                MaximumPlayerCount = br.ReadByte();
-                br.ReadByte();
-                br.ReadByte();
-                br.ReadByte();
-                _bool = br.ReadByte() == 0x01;
-                _bool = br.ReadByte() == 0x01;
-                br.ReadAnsiString();
-                var edf = (ExtraDataFlags)br.ReadByte();
-
-                if (edf.HasFlag(ExtraDataFlags.GamePort)) Port = br.ReadInt16();
-                if (edf.HasFlag(ExtraDataFlags.SteamID)) br.ReadUInt64();
-                if (edf.HasFlag(ExtraDataFlags.SpectatorInfo))
+                if (edf.HasFlag(ExtraDataFlags.GamePort)) br.ReadInt16();                       // - Port
+                if (edf.HasFlag(ExtraDataFlags.SteamID)) br.ReadUInt64();                       // - SteamID
+                if (edf.HasFlag(ExtraDataFlags.SpectatorInfo))                                  // - Spectator Info
                 {
                     br.ReadInt16();
                     br.ReadAnsiString();
                 }
-                if (edf.HasFlag(ExtraDataFlags.GameTagData)) GameTagData = br.ReadAnsiString();
-                if (edf.HasFlag(ExtraDataFlags.GameID)) br.ReadUInt64();
+                if (edf.HasFlag(ExtraDataFlags.GameTagData)) GameTagData = br.ReadAnsiString(); // + GameTagData
+                if (edf.HasFlag(ExtraDataFlags.GameID)) br.ReadUInt64();                        // - GameID
             }
         }
 
