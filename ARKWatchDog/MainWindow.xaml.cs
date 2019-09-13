@@ -105,8 +105,7 @@ namespace ARKWatchdog
             client = new TcpClient("127.0.0.1", 18500);
             while (true)
             {
-                Process[] processes = Process.GetProcessesByName("ARKServerQuery");
-                if (processes.Length == 0)
+                if (Process.GetProcessesByName("ARKServerQuery").Length == 0)
                 {
                     Close();
                     Environment.Exit(Environment.ExitCode);
@@ -117,7 +116,10 @@ namespace ARKWatchdog
                     br = new BinaryReader(clientStream);
                     string receive = string.Empty;
                     receive = br.ReadString();
-                    if (receive == "_disable") WatchIPList.Clear();
+                    if (receive == "_disable")
+                    {
+                        WatchIPList.Clear();
+                    }
                     else if (receive == "_visi") ToggleVisibility();
                     else
                     {
@@ -184,7 +186,8 @@ namespace ARKWatchdog
             else if (sv.GetCurrentPlayer() > 29 && sv.GetCurrentPlayer() < 60)  return ServerPlayerStatus.Warning;
             else                                                                return ServerPlayerStatus.Danger;
         }
-
+        
+        List<Label> labelList = new List<Label>();
         private void ServerQuery()
         {
             lock (WatchIPList)
@@ -193,20 +196,20 @@ namespace ARKWatchdog
                 {
                     if (textVisible)
                     {
-                        List<Label> labelList = new List<Label>();
+                        labelList.Clear();
                         foreach (var watchString in WatchIPList)
                         {
-                            string ip = watchString.Split(',')[0];
-                            string name = watchString.Split(',')[1];
-                            var arkSv = GetServerInfo(ip);
+                            string[] ipAndName = watchString.Split(',');
+                            GameServer arkServer = GetServerInfo(ipAndName[0]);
+                            string name = ipAndName[1];
                             string serverContent = "";
                             Brush foregroundColor = new SolidColorBrush();
                             Color shadowColor = new Color();
-                            if (arkSv != null)
+                            if (arkServer != null)
                             {
-                                serverContent = name + "\n人數: " + arkSv.GetCurrentPlayer() + " / " + arkSv.MaximumPlayerCount + "\n";
-                                foregroundColor = new SolidColorBrush(GetStatusColor(GetServerPlayerStatus(arkSv), false));
-                                shadowColor = GetStatusColor(GetServerPlayerStatus(arkSv), true);
+                                serverContent = name + "\n人數: " + arkServer.GetCurrentPlayer() + " / " + arkServer.MaximumPlayerCount + "\n";
+                                foregroundColor = new SolidColorBrush(GetStatusColor(GetServerPlayerStatus(arkServer), false));
+                                shadowColor = GetStatusColor(GetServerPlayerStatus(arkServer), true);
                             }
                             else
                             {
@@ -214,7 +217,6 @@ namespace ARKWatchdog
                                 foregroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
                                 shadowColor = (Color)ColorConverter.ConvertFromString("#FF000000"); // 黑
                             }
-
                             Label svLabel = new Label()
                             {
                                 Content = serverContent,
@@ -243,7 +245,7 @@ namespace ARKWatchdog
                             SizeToContent = SizeToContent.WidthAndHeight;
                         }
                         mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
-                        foreach(var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
+                        foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
                     }
                     else mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
                 });
@@ -270,19 +272,15 @@ namespace ARKWatchdog
         #region 基礎功能
         private bool canManipulateWindow = false;
         private KeyStates gKeyStates = KeyStates.None;
-        int cnt;
         private void ToggleManipulateWindow(KeyStates inKeyStates)
         {
-            Debug.WriteLine("g - {0}\tin - {1}", gKeyStates, inKeyStates);
             if (inKeyStates != gKeyStates) // 只檢測第一次的變更
             {
-                Debug.WriteLine("-在渲染時偵測到鍵盤 - {0}", cnt);
-                Debug.WriteLine("-新狀態 = {0}", inKeyStates);
                 canManipulateWindow = (canManipulateWindow) ? false : true;
-                //var hwnd = new WindowInteropHelper(this).Handle;
                 WindowsServices.SetWindowExTransparent(hwnd);
                 gKeyStates = inKeyStates;
-                cnt += 1;
+                if (canManipulateWindow)    QueryTimer.Stop();
+                else                        QueryTimer.Start();
             }
         }
 

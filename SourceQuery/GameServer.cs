@@ -59,10 +59,7 @@ namespace SourceQuery
             _client = null;
         }
 
-        public int GetCurrentPlayer()
-        {
-            return Convert.ToInt16(MaximumPlayerCount) - Convert.ToInt16(GameTagData.Split(',')[3].Split(':')[1]);
-        }
+        public int GetCurrentPlayer() => Convert.ToInt16(MaximumPlayerCount) - Convert.ToInt16(GameTagData.Split(',')[3].Split(':')[1]);
 
         public string GetFixedServerName() { return Name.Split(' ')[0]; }
 
