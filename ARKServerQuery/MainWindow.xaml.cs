@@ -1,4 +1,4 @@
-﻿using ARKServerQuery.Classes;
+﻿using ARKServerQuery.Properties;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -8,16 +8,96 @@ using System.Windows.Input;
 
 namespace ARKServerQuery
 {
+    [Serializable]
+    public enum LanguageList { zh_tw, zh_cn, en_us }
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            InitializeLanguageString();
             ShowButton(false);
-            Lable_Tips.Content = "Tips:\nTheIsland\t孤島\tAberration\t畸變\nTheCenter\t中心島\tExtinction\t滅絕\nScorchedEarth\t焦土";
             ServerQuery.InitServerList();
             LocalServer.InitLocalServer();
         }
+        #region 本地化
+        private static LanguageList currentLanguage = LanguageList.zh_tw;
+
+        private void UpdateMapListLanguage()
+        {
+            if (currentLanguage == LanguageList.zh_tw)
+            {
+                Lable_Maps.Content = "地圖:\nTheIsland\t孤島\tAberration\t畸變\nTheCenter\t中心島\tExtinction\t滅絕\nScorchedEarth\t焦土";
+            }
+            else if (currentLanguage == LanguageList.zh_cn)
+            {
+                Lable_Maps.Content = "地图:\nTheIsland\t孤岛\tAberration\t畸变\nTheCenter\t中心岛\tExtinction\t灭绝\nScorchedEarth\t焦土";
+            }
+            else if (currentLanguage == LanguageList.en_us)
+            {
+                Lable_Maps.Content = "Maps:\nTheIsland\t\tAberration\t\nTheCenter\t\tExtinction\t\nScorchedEarth\t";
+            }
+        }
+        private void LoadLanguageFile(string languagefileName)
+        {
+            Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary()
+            {
+                Source = new Uri(languagefileName, UriKind.RelativeOrAbsolute)
+            };
+        }
+        
+        
+        private void InitializeLanguageString()
+        {
+            // setting 預設值
+            currentLanguage = Settings.Default.customLanguage;
+            if (currentLanguage == LanguageList.zh_tw)
+            {
+                LoadLanguageFile("/Lang/zh-tw.xaml");
+                CB_LangList.SelectedIndex = 0;
+                currentLanguage = LanguageList.zh_tw;
+            }
+            else if (currentLanguage == LanguageList.zh_cn)
+            {
+                LoadLanguageFile("/Lang/zh-cn.xaml");
+                CB_LangList.SelectedIndex = 1;
+                currentLanguage = LanguageList.zh_cn;
+            }
+            else if (currentLanguage == LanguageList.en_us)
+            {
+                LoadLanguageFile("/Lang/en-us.xaml");
+                CB_LangList.SelectedIndex = 2;
+                currentLanguage = LanguageList.en_us;
+            }
+            if (Lable_Maps != null) UpdateMapListLanguage();
+
+            // 為了防止物件初始化時呼叫「更改事件」，讀取完設定後才掛鉤上事件
+            CB_LangList.SelectionChanged += CB_LangList_SelectionChanged;
+        }
+
+        private void CB_LangList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CB_LangList.SelectedIndex == 0)
+            {
+                LoadLanguageFile("/Lang/zh-tw.xaml");
+                currentLanguage = LanguageList.zh_tw;
+            }
+            else if (CB_LangList.SelectedIndex == 1)
+            {
+                LoadLanguageFile("/Lang/zh-cn.xaml");
+                currentLanguage = LanguageList.zh_cn;
+            }
+            else if (CB_LangList.SelectedIndex == 2)
+            {
+                LoadLanguageFile("/Lang/en-us.xaml");
+                currentLanguage = LanguageList.en_us;
+            }
+            if (Lable_Maps != null) UpdateMapListLanguage();
+            
+            Settings.Default.customLanguage = currentLanguage;
+            Settings.Default.Save();
+        }
+        #endregion
 
         #region 查詢方法
         // 由輸入的名稱做搜尋
@@ -69,8 +149,8 @@ namespace ARKServerQuery
         // 顯示Tips
         private void ToggleTips()
         {
-            WP_BottomButtonWarp.Visibility  = Lable_Tips.Visibility == Visibility.Hidden ? Visibility.Hidden : Visibility.Visible;
-            Lable_Tips.Visibility           = Lable_Tips.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
+            WP_BottomButtonWarp.Visibility  = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Hidden : Visibility.Visible;
+            Lable_Maps.Visibility           = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
         }
 
         // 檢測監控介面是否存在

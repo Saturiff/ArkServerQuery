@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="SelectLanguage">選擇語言 :</sys:String>
+    <sys:String x:Key="InputServerName">輸入服務器名稱 : </sys:String>
+    <sys:String x:Key="Watch">監控</sys:String>
+    <sys:String x:Key="ServerName">名稱</sys:String>
+    <sys:String x:Key="Players">人數</sys:String>
+    <sys:String x:Key="Join">加入</sys:String>
+    <sys:String x:Key="HideWatch">隱藏監控</sys:String>
+    <sys:String x:Key="CancelWatch">取消監控</sys:String>
+    <sys:String x:Key="SearchAll">全部查詢</sys:String>
+    <sys:String x:Key="SearchStop">停止查詢</sys:String>
+</ResourceDictionary>

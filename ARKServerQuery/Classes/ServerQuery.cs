@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 
-namespace ARKServerQuery.Classes
+namespace ARKServerQuery
 {
     public static class ServerQuery
     {

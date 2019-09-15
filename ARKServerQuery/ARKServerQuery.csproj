@@ -97,8 +97,22 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\ArkServerCollection.cs" />
+    <Compile Include="Classes\BindingProxy.cs" />
     <Compile Include="Classes\LocalServer.cs" />
     <Compile Include="Classes\ServerInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Page Include="Lang\en-us.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Lang\zh-cn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Lang\zh-tw.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

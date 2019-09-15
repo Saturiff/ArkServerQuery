@@ -18,6 +18,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace ARKWatchdog
 {
+    // static 語言變數
     public static class WindowsServices // 讓鼠標忽略該軟件
     {
         const int WS_EX_TRANSPARENT = 0x00000020;
@@ -160,7 +161,7 @@ namespace ARKWatchdog
             return sv;
         }
 
-        private Color GetStatusColor(ServerPlayerStatus status, bool isShadow) // 如果和原本初始化的狀態不同，閃爍並重新給予值
+        private Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
         {
             if (!isShadow)
             {
@@ -182,9 +183,9 @@ namespace ARKWatchdog
 
         private ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
         {
-            if (sv.currentPlayer < 30)                                     return ServerPlayerStatus.Safe;
-            else if (sv.currentPlayer > 29 && sv.currentPlayer < 60)  return ServerPlayerStatus.Warning;
-            else                                                                return ServerPlayerStatus.Danger;
+            if (sv.currentPlayer < 30)                                  return ServerPlayerStatus.Safe;
+            else if (sv.currentPlayer > 29 && sv.currentPlayer < 60)    return ServerPlayerStatus.Warning;
+            else                                                        return ServerPlayerStatus.Danger;
         }
         
         List<Label> labelList = new List<Label>();

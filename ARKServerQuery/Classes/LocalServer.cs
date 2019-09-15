@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace ARKServerQuery.Classes
+namespace ARKServerQuery
 {
     static class LocalServer
     {
