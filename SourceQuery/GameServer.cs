@@ -24,8 +24,8 @@ namespace SourceQuery
         private string _gameTagData;
 
         public string name          => _name.Split(' ')[0];
-        public int currentPlayer    => Convert.ToInt16(maxPlayer) - Convert.ToInt16(_gameTagData.Split(',')[3].Split(':')[1]);
-        public int maxPlayer        => Convert.ToInt32(_maxPlayer);
+        public int currentPlayer    => maxPlayer - Convert.ToInt16(_gameTagData.Split(',')[3].Split(':')[1]);
+        public int maxPlayer        => Convert.ToInt16(_maxPlayer);
         public bool connectStatus;
 
         public GameServer() => connectStatus = true;
