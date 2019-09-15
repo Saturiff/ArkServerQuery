@@ -13,7 +13,7 @@
     <Grid MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" Background="#02000000">
         <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0" >
             <WrapPanel Margin="0,0,0,200" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Label Content="輸入服務器名稱或IP位址 : " FontSize="18" Foreground="White"/>
+                <Label Content="輸入服務器名稱 : " FontSize="18" Foreground="White"/>
                 <TextBox x:Name="TB_ServerID" TextWrapping="Wrap" Width="222" Background="Transparent" BorderBrush="White" Foreground="White" SelectionBrush="White" FontSize="20" TextChanged="TB_ServerID_TextChanged"/>
                 <Button x:Name="B_Tips" Content="?" 
                     Background="#02FFFFFF" Foreground="White" 
