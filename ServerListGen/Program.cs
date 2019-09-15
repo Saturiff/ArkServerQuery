@@ -71,7 +71,7 @@ namespace ServerListGen
             {
                 sv = new GameServer(new IPEndPoint(IPAddress.Parse(onlyIP), Convert.ToInt16(p)));
                 // 紀錄ip port name
-                string name = sv.GetFixedServerName();
+                string name = sv.name;
                 if (!(name.Contains("PVE")
                     || name.Contains("Tek")
                     || name.Contains("Raid")

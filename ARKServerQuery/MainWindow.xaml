@@ -40,7 +40,7 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="名稱" Binding="{Binding name}" Width="370" IsReadOnly="True"/>
                         <DataGridTextColumn Header="人數" Binding="{Binding currentPlayer}" Width="45" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="" Binding="{Binding dgMaxPlayer}" Width="60" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="" Binding="{Binding dgmaxPlayer}" Width="60" IsReadOnly="True"/>
                         <DataGridTemplateColumn Width="40" IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

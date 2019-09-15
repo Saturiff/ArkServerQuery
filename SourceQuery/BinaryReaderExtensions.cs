@@ -16,5 +16,10 @@ namespace SourceQuery
             }
             return Encoding.ASCII.GetString(stringBytes.ToArray());
         }
+
+        public static void PassAnsiStrings(this BinaryReader br, int count)
+        {
+            for (int i = 0; i < count; i++) while ((br.ReadByte()) != 0) ;
+        }
     }
 }

@@ -182,8 +182,8 @@ namespace ARKWatchdog
 
         private ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
         {
-            if (sv.GetCurrentPlayer() < 30)                                     return ServerPlayerStatus.Safe;
-            else if (sv.GetCurrentPlayer() > 29 && sv.GetCurrentPlayer() < 60)  return ServerPlayerStatus.Warning;
+            if (sv.currentPlayer < 30)                                     return ServerPlayerStatus.Safe;
+            else if (sv.currentPlayer > 29 && sv.currentPlayer < 60)  return ServerPlayerStatus.Warning;
             else                                                                return ServerPlayerStatus.Danger;
         }
         
@@ -207,7 +207,7 @@ namespace ARKWatchdog
                             Color shadowColor = new Color();
                             if (arkServer != null)
                             {
-                                serverContent = name + "\n人數: " + arkServer.GetCurrentPlayer() + " / " + arkServer.MaximumPlayerCount + "\n";
+                                serverContent = name + "\n人數: " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n";
                                 foregroundColor = new SolidColorBrush(GetStatusColor(GetServerPlayerStatus(arkServer), false));
                                 shadowColor = GetStatusColor(GetServerPlayerStatus(arkServer), true);
                             }

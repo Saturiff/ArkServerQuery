@@ -31,7 +31,7 @@ namespace ARKServerQuery.Classes
             GameServer arkServer;
             try { arkServer = new GameServer(new IPEndPoint(IPAddress.Parse(ip), port)); }
             catch { return null; }
-            return (arkServer.ConnectStatus) ? arkServer : null;
+            return (arkServer.connectStatus) ? arkServer : null;
         }
         // 將回傳的GameServer寫入Collection
         private static void SearchServerInfo(ServerInfo sv) => arkSvCollection.Add(sv, GetServerInfo(sv.ip, sv.port));

@@ -1,7 +1,6 @@
 ﻿using ICSharpCode.SharpZipLib.BZip2;
 using ICSharpCode.SharpZipLib.Checksums;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,45 +12,33 @@ namespace SourceQuery
     public class GameServer
     {
         [NonSerialized]
-        private IPEndPoint _endpoint;
+        private IPEndPoint _endPoint;
         [NonSerialized]
         private UdpClient _client;
 
         // TSource Engine Query
         [NonSerialized]
         private static readonly byte[] A2S_INFO = { 0x54, 0x53, 0x6F, 0x75, 0x72, 0x63, 0x65, 0x20, 0x45, 0x6E, 0x67, 0x69, 0x6E, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00 };
+        private string _name;
+        private byte _maxPlayer;
+        private string _gameTagData;
 
-        public string Name;
-        public byte MaximumPlayerCount;
-        public bool _bool;
-        public string GameTagData;
-        public bool ConnectStatus = true;
+        public string name          => _name.Split(' ')[0];
+        public int currentPlayer    => Convert.ToInt16(maxPlayer) - Convert.ToInt16(_gameTagData.Split(',')[3].Split(':')[1]);
+        public int maxPlayer        => Convert.ToInt32(_maxPlayer);
+        public bool connectStatus;
 
-        public List<PlayerInfo> Players { get; set; }
-        public Dictionary<string, string> Rules { get; set; }
-        public string Endpoint { get; set; }
-
-        public GameServer()
-        {
-            Players = new List<PlayerInfo>();
-            Rules = new Dictionary<string, string>();
-        }
-
-        public GameServer(IPAddress address)
-            : this(new IPEndPoint(address, 27015))
-        {            
-        }
+        public GameServer() => connectStatus = true;
 
         public GameServer(IPEndPoint endpoint)
             : this()
         {
-            _endpoint = endpoint;
-            Endpoint = endpoint.ToString();
-
+            _endPoint = endpoint;
+            
             using (_client = new UdpClient())
             {
-                _client.Client.SendTimeout = (int)500;
-                _client.Client.ReceiveTimeout = (int)500;
+                _client.Client.SendTimeout = 500;
+                _client.Client.ReceiveTimeout = 500;
                 _client.Connect(endpoint);
 
                 RefreshMainInfo();
@@ -59,46 +46,34 @@ namespace SourceQuery
             _client = null;
         }
 
-        public int GetCurrentPlayer() => Convert.ToInt16(MaximumPlayerCount) - Convert.ToInt16(GameTagData.Split(',')[3].Split(':')[1]);
-
-        public string GetFixedServerName() { return Name.Split(' ')[0]; }
-
         public void RefreshMainInfo()
         {
             Send(A2S_INFO);
             var infoData = Receive();
             using (var br = new BinaryReader(new MemoryStream(infoData)))
             {
-                br.ReadByte();                                                                  // - type byte, not needed
-                
-                br.ReadByte();                                                                  // - Protocol Version
-                Name = br.ReadAnsiString();                                                     // + Server Name
-                br.ReadAnsiString();                                                            // - Map
-                br.ReadAnsiString();                                                            // - Folder
-                br.ReadAnsiString();                                                            // - Game
-                br.ReadInt16();                                                                 // - AppID
-                br.ReadByte();                                                                  // - Player Count
-                MaximumPlayerCount = br.ReadByte();                                             // + Max Players
-                br.ReadByte();                                                                  // - Bot Count
-                br.ReadByte();                                                                  // - Server Type
-                br.ReadByte();                                                                  // - Platform
-                _bool = br.ReadByte() == 0x01;                                                  // - Is Private
-                _bool = br.ReadByte() == 0x01;                                                  // - Have VAC
-                br.ReadAnsiString();                                                            // - Version
-                var edf = (ExtraDataFlags)br.ReadByte();                                        // - Extra Data Flag
-
-                if (edf.HasFlag(ExtraDataFlags.GamePort)) br.ReadInt16();                       // - Port
-                if (edf.HasFlag(ExtraDataFlags.SteamID)) br.ReadUInt64();                       // - SteamID
-                if (edf.HasFlag(ExtraDataFlags.SpectatorInfo))                                  // - Spectator Info
+                br.ReadBytes(2);                                                                    // - type byte, Protocol Version
+                _name = br.ReadAnsiString();                                                        // + Server Name
+                br.PassAnsiStrings(3);                                                              // - Map, Folder, Game
+                br.ReadInt16();                                                                     // - AppID
+                br.ReadByte();                                                                      // - Player Count
+                _maxPlayer = br.ReadByte();                                                         // + Max Players
+                br.ReadBytes(5);                                                                    // - Bot Count, Server Type, Platform, Is Private, Have VAC
+                br.ReadAnsiString();                                                                // - Version
+                var edf = (ExtraDataFlags)br.ReadByte();                                            // - Extra Data Flag
+                if (edf.HasFlag(ExtraDataFlags.GamePort)) br.ReadInt16();                           // - Port
+                if (edf.HasFlag(ExtraDataFlags.SteamID)) br.ReadUInt64();                           // - SteamID
+                if (edf.HasFlag(ExtraDataFlags.SpectatorInfo))                                      // - Spectator Info
                 {
                     br.ReadInt16();
                     br.ReadAnsiString();
                 }
-                if (edf.HasFlag(ExtraDataFlags.GameTagData)) GameTagData = br.ReadAnsiString(); // + GameTagData
-                if (edf.HasFlag(ExtraDataFlags.GameID)) br.ReadUInt64();                        // - GameID
+                if (edf.HasFlag(ExtraDataFlags.gameTagData)) _gameTagData = br.ReadAnsiString();    // + gameTagData
+                if (edf.HasFlag(ExtraDataFlags.GameID)) br.ReadUInt64();                            // - GameID
             }
         }
 
+        // 將訊息更換為A2S指定的格式再送出
         private void Send(byte[] message)
         {
             var fullmessage = new byte[4 + message.Length];
@@ -119,7 +94,7 @@ namespace SourceQuery
             {
                 do
                 {
-                    var result = _client.Receive(ref _endpoint);
+                    var result = _client.Receive(ref _endPoint);
                     using (var br = new BinaryReader(new MemoryStream(result)))
                     {
                         if (br.ReadInt32() == -2)
@@ -157,10 +132,9 @@ namespace SourceQuery
                 }
                 return combinedData;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("連線錯誤: " + e.ToString());
-                ConnectStatus = false;
+                connectStatus = false;
                 return null;
             }
         }

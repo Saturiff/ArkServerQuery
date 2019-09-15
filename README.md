@@ -1,10 +1,12 @@
 # ArkServerQuery 方舟服務器查詢
 
 ## 專案
-ARKServerQuery -> 服務器查詢介面，與監控介面進行交互  
-ARKWatchDog -> 服務器監控介面  
-ServerListGen -> 由官方服務器列表生成可供查詢介面查詢之文字檔(ServerList.txt)  
-SourceQuery -> 與服務器進行Udp連線交換資料，改寫自 https://github.com/brycekahle/source-query-net/  
+|專案|註解|
+|:-------------:|-------------|
+|ARKServerQuery|服務器查詢介面，與監控介面進行交互|
+|ARKWatchDog|服務器監控介面|
+|ServerListGen|由官方服務器列表生成可供查詢介面查詢之文字檔(ServerList.txt)|
+|SourceQuery|與服務器進行Udp連線交換資料，改寫自 https://github.com/brycekahle/source-query-net/|
 
 
 ## 撰寫環境
@@ -41,3 +43,7 @@ SourceQuery -> 與服務器進行Udp連線交換資料，改寫自 https://githu
 │ ├─ServerList.txt  
 │ └─SourceQuery.dll  
 └─ARKServerQuery.exe  
+
+
+## 待辦事項
+支援多國語言

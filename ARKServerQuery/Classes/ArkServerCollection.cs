@@ -14,7 +14,7 @@ namespace ARKServerQuery
             {
                 Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
                 {
-                    _collection.Add(new ServerInfo(sv.ip, sv.port, sv.name, arkServer.GetCurrentPlayer(), Convert.ToString(arkServer.MaximumPlayerCount)));
+                    _collection.Add(new ServerInfo(sv.ip, sv.port, sv.name, arkServer.currentPlayer, Convert.ToString(arkServer.maxPlayer)));
                 });
             }
             else
