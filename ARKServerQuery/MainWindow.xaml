@@ -54,9 +54,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <!--DataGridTextColumn Header="{DynamicResource ServerName}" Binding="{Binding name}" Width="370" IsReadOnly="True"/-->
                         <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_0}}" Binding="{Binding name}" Width="370" IsReadOnly="True"/>
-                        <!--DataGridTextColumn Header="{DynamicResource Players}" Binding="{Binding currentPlayer}" Width="auto" IsReadOnly="True"/-->
                         <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_1}}" Binding="{Binding currentPlayer}" Width="auto" IsReadOnly="True"/>
                         <DataGridTextColumn Header="" Binding="{Binding dgmaxPlayer}" Width="60" IsReadOnly="True"/>
                         <DataGridTemplateColumn Width="40" IsReadOnly="True">

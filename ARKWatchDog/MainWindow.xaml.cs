@@ -122,6 +122,7 @@ namespace ARKWatchdog
                         WatchIPList.Clear();
                     }
                     else if (receive == "_visi") ToggleVisibility();
+                    else if (receive.Substring(0, 6) == "_lang,") UpdateLanguage(receive.Substring(6, 5));
                     else
                     {
                         lock (WatchIPList)
@@ -134,7 +135,23 @@ namespace ARKWatchdog
                 catch { /* MessageBox.Show("接收失败！");*/ }
             }
         }
-
+        private static string currentLanguage = "zh_tw";
+        private readonly Dictionary<string, string> mutiLangText_PlayerText = new Dictionary<string, string>()
+        {
+            { "zh_tw", "人數" },
+            { "zh_cn", "人数" },
+            { "en_us", "Players" }
+        };
+        private readonly Dictionary<string, string> mutiLangText_QueryFailed = new Dictionary<string, string>()
+        {
+            { "zh_tw", "服務器訪問失敗" },
+            { "zh_cn", "服务器访问失败" },
+            { "en_us", "Server query failed" }
+        };
+        private void UpdateLanguage(string lang)
+        {
+            currentLanguage = lang;
+        }
         
         private bool textVisible = true;
         private void ToggleVisibility()
@@ -208,13 +225,13 @@ namespace ARKWatchdog
                             Color shadowColor = new Color();
                             if (arkServer != null)
                             {
-                                serverContent = name + "\n人數: " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n";
+                                serverContent = name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n";
                                 foregroundColor = new SolidColorBrush(GetStatusColor(GetServerPlayerStatus(arkServer), false));
                                 shadowColor = GetStatusColor(GetServerPlayerStatus(arkServer), true);
                             }
                             else
                             {
-                                serverContent = name + "\n服務器訪問失敗，或許是離線中 !\n";
+                                serverContent = name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
                                 foregroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
                                 shadowColor = (Color)ColorConverter.ConvertFromString("#FF000000"); // 黑
                             }

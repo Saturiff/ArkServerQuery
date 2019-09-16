@@ -22,7 +22,21 @@ namespace ARKServerQuery
         }
         #region 本地化
         private static LanguageList currentLanguage = LanguageList.zh_tw;
-
+        private void UpdateWatchdogLanguage()
+        {
+            if (currentLanguage == LanguageList.zh_tw)
+            {
+                LocalServer.Send("_lang,zh_tw");
+            }
+            else if (currentLanguage == LanguageList.zh_cn)
+            {
+                LocalServer.Send("_lang,zh_cn");
+            }
+            else if (currentLanguage == LanguageList.en_us)
+            {
+                LocalServer.Send("_lang,en_us");
+            }
+        }
         private void UpdateMapListLanguage()
         {
             if (currentLanguage == LanguageList.zh_tw)
@@ -96,6 +110,7 @@ namespace ARKServerQuery
             
             Settings.Default.customLanguage = currentLanguage;
             Settings.Default.Save();
+            if (WatchdogOnline()) UpdateWatchdogLanguage();
         }
         #endregion
 
@@ -144,6 +159,7 @@ namespace ARKServerQuery
             }
             object watchdogStr = ((Button)sender).CommandParameter;
             LocalServer.Send(Convert.ToString(watchdogStr));
+            UpdateWatchdogLanguage();
         }
 
         // 顯示Tips
