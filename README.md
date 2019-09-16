@@ -2,11 +2,14 @@
 
 |專案|註解|
 |:-------------:|-------------|
-|ARKServerQuery|服務器查詢介面，與監控介面進行交互|
+|ARKServerQuery|服務器查詢介面|
 |ARKWatchDog|服務器監控介面|
 |ServerListGen|由官方服務器列表生成可供查詢介面查詢之文字檔(ServerList.txt)|
 |SourceQuery|與服務器進行Udp連線交換資料，改寫自 https://github.com/brycekahle/source-query-net/|
-
+----
+專案關係圖
+![專案關係_zh](/img/專案關係_zh.PNG)
+![專案關係_en](/img/專案關係_en.PNG)
 ## 操作示範
 https://youtu.be/AJW6x247SUI
 
