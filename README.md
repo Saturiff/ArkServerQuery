@@ -1,4 +1,7 @@
 # ArkServerQuery 方舟服務器查詢
+專案關係圖
+![專案關係_zh](/img/專案關係_zh.PNG)
+![專案關係_en](/img/專案關係_en.PNG)
 
 |專案|註解|
 |:-------------:|-------------|
@@ -6,12 +9,11 @@
 |ARKWatchDog|服務器監控介面|
 |ServerListGen|由官方服務器列表生成可供查詢介面查詢之文字檔(ServerList.txt)|
 |SourceQuery|與服務器進行Udp連線交換資料，改寫自 https://github.com/brycekahle/source-query-net/|
-----
-專案關係圖
-![專案關係_zh](/img/專案關係_zh.PNG)
-![專案關係_en](/img/專案關係_en.PNG)
+
+
 ## 操作示範
 https://youtu.be/AJW6x247SUI
+
 
 ## 撰寫環境
 > Visual studio 2019  
@@ -25,13 +27,15 @@ https://youtu.be/AJW6x247SUI
 > ARKWatchdog.exe  
 > ICSharpCode.SharpZipLib.dll  
 > SourceQuery.dll  
-4. ServerList.txt自行生成後放到./bin  
+4. ServerList.txt由ServerListGen專案生成後放到./bin  
 
 
 ## 要如何發行可執行軟件?
 1. 發行 ARKServerQuery、ARKWatchdog  
 2. 在欲存放軟件之地點新增bin資料夾  
-3. ARKServerQuery發行目錄下的ARKServerQuery.exe放到./  
+3. ARKServerQuery發行目錄下的以下檔案ARKServerQuery.exe放到./  
+> ARKServerQuery.exe
+> ARKServerQuery.exe.config
 4. ARKWatchDog發行目錄下的以下檔案放到./bin  
 > ARKWatchdog.exe  
 > ICSharpCode.SharpZipLib.dll  
