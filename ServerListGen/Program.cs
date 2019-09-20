@@ -31,7 +31,7 @@ namespace ServerListGen
             
             string[] port = new string[4] { "27015", "27017", "27019", "27021" };
 
-            // 取得服務器IP列表
+            // 取得伺服器IP列表
             WebRequest webRequest = WebRequest.Create(@"http://arkdedicated.com/officialservers.ini");
             webRequest.Method = "GET";
             WebResponse webResponse = webRequest.GetResponse();
@@ -40,7 +40,7 @@ namespace ServerListGen
             webResponse.Close();
 
             Thread searchThread;
-            // 寫入回應的服務器資訊
+            // 寫入回應的伺服器資訊
             foreach (string ip in resultIP)
             {
                 string onlyIP = ip;
@@ -82,9 +82,7 @@ namespace ServerListGen
                     || name.Contains("Classic")
                     || name.Contains("pocalypse")
                     || name.Contains("LEGACY")))
-                {
                     svList.Add(onlyIP + ',' + p + ',' + name + ',');
-                }
             }
             catch { }
         }

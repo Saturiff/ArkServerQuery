@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ThreadState = System.Threading.ThreadState;
 
 namespace ARKServerQuery
 {
@@ -20,37 +21,26 @@ namespace ARKServerQuery
             ServerQuery.InitServerList();
             LocalServer.InitLocalServer();
         }
+
         #region 本地化
         private static LanguageList currentLanguage = LanguageList.zh_tw;
         private void UpdateWatchdogLanguage()
         {
             if (currentLanguage == LanguageList.zh_tw)
-            {
                 LocalServer.Send("_lang,zh_tw");
-            }
             else if (currentLanguage == LanguageList.zh_cn)
-            {
                 LocalServer.Send("_lang,zh_cn");
-            }
             else if (currentLanguage == LanguageList.en_us)
-            {
                 LocalServer.Send("_lang,en_us");
-            }
         }
         private void UpdateMapListLanguage()
         {
             if (currentLanguage == LanguageList.zh_tw)
-            {
                 Lable_Maps.Content = "地圖:\nTheIsland\t孤島\tAberration\t畸變\nTheCenter\t中心島\tExtinction\t滅絕\nScorchedEarth\t焦土";
-            }
             else if (currentLanguage == LanguageList.zh_cn)
-            {
                 Lable_Maps.Content = "地图:\nTheIsland\t孤岛\tAberration\t畸变\nTheCenter\t中心岛\tExtinction\t灭绝\nScorchedEarth\t焦土";
-            }
             else if (currentLanguage == LanguageList.en_us)
-            {
                 Lable_Maps.Content = "Maps:\nTheIsland\t\tAberration\t\nTheCenter\t\tExtinction\t\nScorchedEarth\t";
-            }
         }
         private void LoadLanguageFile(string languagefileName)
         {
@@ -119,18 +109,13 @@ namespace ARKServerQuery
         private void SearchByName()
         {
             string inString = TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text);
-            if (inString.Length > 1)
-            {
-                ServerQuery.ListSearch(inString);
-            }
-            else if (TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text == string.Empty))
-            {
-                ServerQuery.arkSvCollection.Clear();
-            }
+            if (inString.Length > 1)                                                        ServerQuery.ListSearch(inString);
+            else if (TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text == string.Empty)) ServerQuery.arkSvCollection.Clear();
+            
             DG_ServerList.Dispatcher.Invoke(() => DG_ServerList.ItemsSource = ArkServerCollection.collection);
         }
 
-        // 搜尋所有服務器
+        // 搜尋所有伺服器
         private void SearchByAll()
         {
             IsSearching(true);
@@ -140,18 +125,19 @@ namespace ARKServerQuery
         }
         #endregion
 
-        #region 服務器清單
-        // 加入服務器
+        #region 伺服器清單
+        // 加入伺服器
         private void JoinServer(object sender, RoutedEventArgs e)
         {
             string watchIP = ((Button)sender).CommandParameter.ToString().Split(',')[0];
             Process.Start("steam://connect/" + watchIP);
         }
 
-        // 對監控介面傳遞服務器資訊，若是第一次執行則開啟監控介面
+        // 對監控介面傳遞伺服器資訊，若是第一次執行則開啟監控介面
         private void ToggleServerWatchdog(object sender, RoutedEventArgs e)
         {
-            if (!WatchdogOnline())
+            // BUG: 關閉監控重啟
+            if (!WatchdogOnline() && LocalServer.serverTread.ThreadState != ThreadState.Running)
             {
                 LocalServer.serverTread.Start();
                 Process.Start(@"bin\ARKWatchdog.exe");
@@ -162,8 +148,8 @@ namespace ARKServerQuery
             UpdateWatchdogLanguage();
         }
 
-        // 顯示Tips
-        private void ToggleTips()
+        // 顯示地圖名稱
+        private void ToggleMaps()
         {
             WP_BottomButtonWarp.Visibility  = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Hidden : Visibility.Visible;
             Lable_Maps.Visibility           = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
@@ -173,11 +159,11 @@ namespace ARKServerQuery
         private bool WatchdogOnline() => Process.GetProcessesByName("ARKWatchdog").Length > 0;
 
         // 對搜尋狀態做按鈕的調整
-        private void IsSearching(bool b)
+        private void IsSearching(bool newStatus)
         {
-            TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.IsEnabled = !b);
-            B_Start_Load.Dispatcher.Invoke(() => B_Start_Load.IsEnabled = !b);
-            B_Stop_Load.Dispatcher.Invoke(() => B_Stop_Load.IsEnabled = b);
+            TB_ServerID.Dispatcher.Invoke   (() => TB_ServerID.IsEnabled    = !newStatus);
+            B_Start_Load.Dispatcher.Invoke  (() => B_Start_Load.IsEnabled   = !newStatus);
+            B_Stop_Load.Dispatcher.Invoke   (() => B_Stop_Load.IsEnabled    =  newStatus);
         }
 
         // 顯示最小化按鈕
@@ -227,7 +213,7 @@ namespace ARKServerQuery
             IsSearching(false);
         }
 
-        private void ClickTips(object sender, RoutedEventArgs e) => ToggleTips();
+        private void ClickMaps(object sender, RoutedEventArgs e) => ToggleMaps();
 
         private void ClickDisableAllWatch(object sender, RoutedEventArgs e)
         {

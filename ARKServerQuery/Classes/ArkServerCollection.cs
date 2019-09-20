@@ -7,7 +7,7 @@ namespace ARKServerQuery
 {
     public class ArkServerCollection
     {
-        // 新增服務器至Collection
+        // 新增伺服器至Collection
         public void Add(ServerInfo sv, GameServer arkServer)
         {
             if (arkServer != null)
@@ -25,7 +25,7 @@ namespace ARKServerQuery
                 });
             }
         }
-        // 清空服務器Collection
+        // 清空伺服器Collection
         public void Clear()
         {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
@@ -34,7 +34,7 @@ namespace ARKServerQuery
             });
         }
 
-        // 儲存服務器的主Collection
+        // 儲存伺服器的主Collection
         protected static ObservableCollection<ServerInfo> _collection = new ObservableCollection<ServerInfo>();
         public static ObservableCollection<ServerInfo> collection { get { return _collection; } }
     }

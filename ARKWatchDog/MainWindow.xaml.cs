@@ -1,9 +1,7 @@
-﻿using SourceQuery;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
@@ -11,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using ThreadState = System.Threading.ThreadState;
 using Timer = System.Windows.Forms.Timer;
 
@@ -19,7 +16,8 @@ namespace ARKWatchdog
 {
     public partial class MainWindow : Window
     {
-        IntPtr hwnd;
+        private IntPtr hwnd;
+        // 初始化時將目前視窗參數儲存
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
@@ -27,7 +25,6 @@ namespace ARKWatchdog
             WindowsServices.SetOriStyle(hwnd);
         }
 
-        
         private StackPanel mainPanel = new StackPanel();
 
         public MainWindow()
@@ -38,9 +35,9 @@ namespace ARKWatchdog
             Thread localSvThread = new Thread(LocalClient);
             localSvThread.Start();
             InitQuery();
-
         }
 
+        // Hook全域鍵盤
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
             if (((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.Down) > 0)
@@ -51,12 +48,10 @@ namespace ARKWatchdog
                 ToggleManipulateWindow(KeyStates.None);
         }
 
-        private List<string> WatchIPList = new List<string>();
+        private List<string> watchIPList = new List<string>();
 
         #region 本地客戶端
-        private static string GetIP(string fullIP) => Convert.ToString(fullIP.Split(':')[0]);
-        private static int GetPort(string fullIP) => Convert.ToInt16(fullIP.Split(':')[1]);
-
+       
         private void LocalClient()
         {
             TcpClient client;
@@ -77,137 +72,41 @@ namespace ARKWatchdog
                     receive = br.ReadString();
                     if (receive == "_disable")
                     {
-                        WatchIPList.Clear();
+                        watchIPList.Clear();
                     }
                     else if (receive == "_visi") ToggleVisibility();
-                    else if (receive.Substring(0, 6) == "_lang,") UpdateLanguage(receive.Substring(6, 5));
+                    else if (receive.Substring(0, 6) == "_lang,") ServerLabel.UpdateLanguage(receive.Substring(6, 5));
                     else
                     {
-                        lock (WatchIPList)
+                        lock (watchIPList)
                         {
-                            if (!WatchIPList.Contains(receive)) WatchIPList.Add(receive);
-                            else if (WatchIPList.Contains(receive)) WatchIPList.Remove(receive);
+                            if (!watchIPList.Contains(receive)) watchIPList.Add(receive);
+                            else if (watchIPList.Contains(receive)) watchIPList.Remove(receive);
                         }
                     }
                 }
                 catch { }
             }
         }
-        private static string currentLanguage = "zh_tw";
-        private static readonly Dictionary<string, string> mutiLangText_PlayerText = new Dictionary<string, string>()
-        {
-            { "zh_tw", "人數" },
-            { "zh_cn", "人数" },
-            { "en_us", "Players" }
-        };
-        private static readonly Dictionary<string, string> mutiLangText_QueryFailed = new Dictionary<string, string>()
-        {
-            { "zh_tw", "服務器訪問失敗" },
-            { "zh_cn", "服务器访问失败" },
-            { "en_us", "Server query failed" }
-        };
-        private void UpdateLanguage(string lang)
-        {
-            currentLanguage = lang;
-        }
+        #endregion
         
         private bool textVisible = true;
-        private void ToggleVisibility()
-        {
-            if (textVisible)    textVisible = false;
-            else                textVisible = true;
-        }
-        #endregion
+        private void ToggleVisibility() => textVisible = textVisible ? false : true;
 
         #region 查詢主計時器
         Timer QueryTimer = new Timer { Interval = 1000 };
-        
-        private enum ServerPlayerStatus { Safe, Warning, Danger }
-
-        private static GameServer GetServerInfo(string _fullIP)
-        {
-            GameServer sv;
-            string ip = GetIP(_fullIP);
-            int port = GetPort(_fullIP);
-            ip = ip.Split(' ')[0];
-            try { sv = new GameServer(new IPEndPoint(IPAddress.Parse(ip), port)); }
-            catch { return null; }
-
-            return sv;
-        }
-
-        private static Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
-        {
-            if (!isShadow)
-            {
-                if (status == ServerPlayerStatus.Safe)
-                    return (Color)ColorConverter.ConvertFromString("#FF00A800"); // 綠
-                else if (status == ServerPlayerStatus.Warning)
-                    return (Color)ColorConverter.ConvertFromString("#FFBB4D00"); // 橘
-                else
-                    return (Color)ColorConverter.ConvertFromString("#FFA80000"); // 紅
-            }
-            else return (Color)ColorConverter.ConvertFromString((status == ServerPlayerStatus.Safe || status == ServerPlayerStatus.Warning) ? "#FF000000" : "#FFA85C00");
-        }
-
-        private static ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
-        {
-            if (sv.currentPlayer < 30)                                  return ServerPlayerStatus.Safe;
-            else if (sv.currentPlayer > 29 && sv.currentPlayer < 60)    return ServerPlayerStatus.Warning;
-            else                                                        return ServerPlayerStatus.Danger;
-        }
-        private class ServerLabel : Label
-        {
-            public ServerLabel(string watchString)
-            {
-                string[] ipAndName = watchString.Split(',');
-                GameServer arkServer = GetServerInfo(ipAndName[0]);
-                string name = ipAndName[1];
-                Brush foregroundColor = new SolidColorBrush();
-
-                Content = (arkServer != null)
-                    ? name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n"
-                    : name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
-                FontSize = 20;
-                HorizontalAlignment = HorizontalAlignment.Left;
-                HorizontalContentAlignment = HorizontalAlignment.Left;
-                VerticalAlignment = VerticalAlignment.Top;
-                Foreground = new SolidColorBrush((arkServer != null)
-                    ? GetStatusColor(GetServerPlayerStatus(arkServer), false)
-                    : (Color)ColorConverter.ConvertFromString("#FF00A800")), // 綠
-                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00000000"));
-                BorderBrush = new SolidColorBrush(Colors.Black);
-                FontStretch = FontStretches.SemiCondensed;
-                FontWeight = FontWeights.Bold;
-                Margin = new Thickness(45, 0, 492, 0);
-                Opacity = 1;
-                Effect = new DropShadowEffect
-                {
-                    BlurRadius = 20,
-                    Color = (arkServer != null)
-                    ? GetStatusColor(GetServerPlayerStatus(arkServer), true)
-                    : (Color)ColorConverter.ConvertFromString("#FF000000"), // 黑,
-                Direction = 320,
-                    ShadowDepth = 0,
-                    Opacity = 1
-                };
-            }
-        }
-
-        List<Label> labelList = new List<Label>();
+        List<ServerLabel> labelList = new List<ServerLabel>();
         private void ServerQuery()
         {
-            lock (WatchIPList)
-            {
+            lock (watchIPList)
                 Dispatcher.Invoke(() =>
                 {
                     if (textVisible)
                     {
                         labelList.Clear();
-                        foreach (var watchString in WatchIPList)
+                        foreach (var watchString in watchIPList)
                         {
-                            ServerLabel svLabel = new ServerLabel(watchString);
-                            svLabel.MouseLeftButtonDown += ClickDrag;
+                            ServerLabel svLabel = new ServerLabel(watchString, ClickDrag);
                             labelList.Add(svLabel);
                             SizeToContent = SizeToContent.WidthAndHeight;
                         }
@@ -216,7 +115,6 @@ namespace ARKWatchdog
                     }
                     else mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
                 });
-            }
         }
 
         Thread textUpdate;
@@ -236,7 +134,6 @@ namespace ARKWatchdog
         }
         #endregion
 
-        #region 基礎功能
         private bool canManipulateWindow = false;
         private KeyStates gKeyStates = KeyStates.None;
         private void ToggleManipulateWindow(KeyStates inKeyStates)
@@ -252,6 +149,5 @@ namespace ARKWatchdog
         }
 
         private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
-        #endregion
     }
 }

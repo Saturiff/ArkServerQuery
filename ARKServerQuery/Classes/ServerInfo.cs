@@ -18,11 +18,11 @@
             dgmaxPlayer = " / " + maxPlayer;
             watchdogString = ip + ":" + port + ',' + name;
         }
-        // 服務器IP
+        // 伺服器IP
         public string ip { get; set; }
-        // 服務器Port
+        // 伺服器Port
         public int port { get; set; }
-        // 服務器名稱
+        // 伺服器名稱
         public string name { get; set; }
         // 傳遞到監控介面的字串
         public string watchdogString { get; set; }

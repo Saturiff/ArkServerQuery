@@ -167,14 +167,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="70-70.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SourceQuery\SourceQuery.csproj">
       <Project>{c8abdc1f-6ad6-4c50-9f1a-9c06de72555f}</Project>
       <Name>SourceQuery</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="70-70.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

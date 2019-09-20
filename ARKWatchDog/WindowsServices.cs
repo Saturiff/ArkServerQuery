@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace ARKWatchdog
 {
-    // static 語言變數
-    public static class WindowsServices // 讓鼠標忽略該軟件
+    // 讓鼠標忽略該軟件
+    public static class WindowsServices
     {
-        const int WS_EX_TRANSPARENT = 0x00000020;
-        const int GWL_EXSTYLE = (-20);
+        private const int WS_EX_TRANSPARENT = 0x00000020;
+        private const int GWL_EXSTYLE = (-20);
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -17,16 +17,10 @@ namespace ARKWatchdog
 
         public static void SetWindowExTransparent(IntPtr hwnd)
         {
-            if (isA)
-            {
-                SetWindowLong(hwnd, GWL_EXSTYLE, oriStyle);
-            }
-            else
-            {
-                SetWindowLong(hwnd, GWL_EXSTYLE, transparentStyle);
-            }
+            SetWindowLong(hwnd, GWL_EXSTYLE, (isA) ? oriStyle : transparentStyle);
             isA = (isA) ? false : true;
         }
+
         public static void SetOriStyle(IntPtr hwnd)
         {
             oriStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
@@ -34,6 +28,7 @@ namespace ARKWatchdog
             SetWindowLong(hwnd, GWL_EXSTYLE, transparentStyle);
             isA = true;
         }
+
         private static int oriStyle;
         private static int transparentStyle;
         private static bool isA;

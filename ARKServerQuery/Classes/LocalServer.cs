@@ -13,34 +13,34 @@ namespace ARKServerQuery
         // 使用本機的Port: 18500進行資料傳遞
         private static void LocalHost()
         {
-            var myListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 18500);
-            myListener.Start();
-            newClient = myListener.AcceptTcpClient();
-            // 未使用的功能：接收資料
-            /*
-            while (true)
-            {
-                try
-                {
-                    clientStream = newClient.GetStream();
-                    var br = new BinaryReader(clientStream);
-                    string receive = null;
-                    receive = br.ReadString();
-                }
-                catch { }
-            }
-            */
+            var tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 18500);
+            tcpListener.Start();
+            tcpClient = tcpListener.AcceptTcpClient();
         }
+        // 未使用的功能：接收資料
+        /*
+        while (true)
+        {
+            try
+            {
+                clientStream = newClient.GetStream();
+                var br = new BinaryReader(clientStream);
+                string receive = null;
+                receive = br.ReadString();
+            }
+            catch { }
+        }
+        */
 
         // 傳遞字串資料到監控介面
         public static void Send(string data)
         {
-            clientStream = newClient.GetStream();
+            clientStream = tcpClient.GetStream();
             var bw = new BinaryWriter(clientStream);
             bw.Write(data);
         }
 
-        private static TcpClient newClient;
+        private static TcpClient tcpClient;
         private static NetworkStream clientStream;
         public static Thread serverTread;
     }

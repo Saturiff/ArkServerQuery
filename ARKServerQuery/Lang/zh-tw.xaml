@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <sys:String x:Key="SelectLanguage">選擇語言 :</sys:String>
-    <sys:String x:Key="InputServerName">輸入服務器名稱 : </sys:String>
+    <sys:String x:Key="InputServerName">輸入伺服器名稱 : </sys:String>
     <sys:String x:Key="Watch">監控</sys:String>
     <sys:String x:Key="ServerName">名稱</sys:String>
     <sys:String x:Key="Players">人數</sys:String>
