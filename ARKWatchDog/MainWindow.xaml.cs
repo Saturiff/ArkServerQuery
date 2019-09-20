@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,42 +17,6 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace ARKWatchdog
 {
-    // static 語言變數
-    public static class WindowsServices // 讓鼠標忽略該軟件
-    {
-        const int WS_EX_TRANSPARENT = 0x00000020;
-        const int GWL_EXSTYLE = (-20);
-
-        [DllImport("user32.dll")]
-        static extern int GetWindowLong(IntPtr hwnd, int index);
-
-        [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
-
-        public static void SetWindowExTransparent(IntPtr hwnd)
-        {
-            if(isA)
-            {
-                SetWindowLong(hwnd, GWL_EXSTYLE, oriStyle);
-            }
-            else
-            {
-                SetWindowLong(hwnd, GWL_EXSTYLE, transparentStyle);
-            }
-            isA = (isA) ? false : true;
-        }
-        public static void SetOriStyle(IntPtr hwnd)
-        {
-            oriStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            transparentStyle = oriStyle | WS_EX_TRANSPARENT;
-            SetWindowLong(hwnd, GWL_EXSTYLE, transparentStyle);
-            isA = true;
-        }
-        private static int oriStyle;
-        private static int transparentStyle;
-        private static bool isA;
-    }
-
     public partial class MainWindow : Window
     {
         IntPtr hwnd;
@@ -64,9 +27,7 @@ namespace ARKWatchdog
             WindowsServices.SetOriStyle(hwnd);
         }
 
-        private TcpClient client;
-        public BinaryReader br;
-        public BinaryWriter bw;
+        
         private StackPanel mainPanel = new StackPanel();
 
         public MainWindow()
@@ -84,25 +45,22 @@ namespace ARKWatchdog
         {
             if (((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.Down) > 0)
                 || ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.Down) > 0))
-            {
                 ToggleManipulateWindow(KeyStates.Down);
-            }
             else if ((((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.None) == 0)
-                || ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.None) == 0))
-                && canManipulateWindow)
-            {
+                || ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.None) == 0)) && canManipulateWindow)
                 ToggleManipulateWindow(KeyStates.None);
-            }
         }
 
         private List<string> WatchIPList = new List<string>();
 
         #region 本地客戶端
-        private string GetIP(string fullIP) => Convert.ToString(fullIP.Split(':')[0]);
-        private int GetPort(string fullIP) => Convert.ToInt16(fullIP.Split(':')[1]);
+        private static string GetIP(string fullIP) => Convert.ToString(fullIP.Split(':')[0]);
+        private static int GetPort(string fullIP) => Convert.ToInt16(fullIP.Split(':')[1]);
 
         private void LocalClient()
         {
+            TcpClient client;
+            BinaryReader br;
             client = new TcpClient("127.0.0.1", 18500);
             while (true)
             {
@@ -132,17 +90,17 @@ namespace ARKWatchdog
                         }
                     }
                 }
-                catch { /* MessageBox.Show("接收失败！");*/ }
+                catch { }
             }
         }
         private static string currentLanguage = "zh_tw";
-        private readonly Dictionary<string, string> mutiLangText_PlayerText = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> mutiLangText_PlayerText = new Dictionary<string, string>()
         {
             { "zh_tw", "人數" },
             { "zh_cn", "人数" },
             { "en_us", "Players" }
         };
-        private readonly Dictionary<string, string> mutiLangText_QueryFailed = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> mutiLangText_QueryFailed = new Dictionary<string, string>()
         {
             { "zh_tw", "服務器訪問失敗" },
             { "zh_cn", "服务器访问失败" },
@@ -166,7 +124,7 @@ namespace ARKWatchdog
         
         private enum ServerPlayerStatus { Safe, Warning, Danger }
 
-        private GameServer GetServerInfo(string _fullIP)
+        private static GameServer GetServerInfo(string _fullIP)
         {
             GameServer sv;
             string ip = GetIP(_fullIP);
@@ -178,7 +136,7 @@ namespace ARKWatchdog
             return sv;
         }
 
-        private Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
+        private static Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
         {
             if (!isShadow)
             {
@@ -189,22 +147,53 @@ namespace ARKWatchdog
                 else
                     return (Color)ColorConverter.ConvertFromString("#FFA80000"); // 紅
             }
-            else
-            {
-                if (status == ServerPlayerStatus.Safe || status == ServerPlayerStatus.Warning)
-                    return (Color)ColorConverter.ConvertFromString("#FF000000"); // 黑
-                else
-                    return (Color)ColorConverter.ConvertFromString("#FFA85C00"); // 橘
-            }
+            else return (Color)ColorConverter.ConvertFromString((status == ServerPlayerStatus.Safe || status == ServerPlayerStatus.Warning) ? "#FF000000" : "#FFA85C00");
         }
 
-        private ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
+        private static ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
         {
             if (sv.currentPlayer < 30)                                  return ServerPlayerStatus.Safe;
             else if (sv.currentPlayer > 29 && sv.currentPlayer < 60)    return ServerPlayerStatus.Warning;
             else                                                        return ServerPlayerStatus.Danger;
         }
-        
+        private class ServerLabel : Label
+        {
+            public ServerLabel(string watchString)
+            {
+                string[] ipAndName = watchString.Split(',');
+                GameServer arkServer = GetServerInfo(ipAndName[0]);
+                string name = ipAndName[1];
+                Brush foregroundColor = new SolidColorBrush();
+
+                Content = (arkServer != null)
+                    ? name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n"
+                    : name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
+                FontSize = 20;
+                HorizontalAlignment = HorizontalAlignment.Left;
+                HorizontalContentAlignment = HorizontalAlignment.Left;
+                VerticalAlignment = VerticalAlignment.Top;
+                Foreground = new SolidColorBrush((arkServer != null)
+                    ? GetStatusColor(GetServerPlayerStatus(arkServer), false)
+                    : (Color)ColorConverter.ConvertFromString("#FF00A800")), // 綠
+                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00000000"));
+                BorderBrush = new SolidColorBrush(Colors.Black);
+                FontStretch = FontStretches.SemiCondensed;
+                FontWeight = FontWeights.Bold;
+                Margin = new Thickness(45, 0, 492, 0);
+                Opacity = 1;
+                Effect = new DropShadowEffect
+                {
+                    BlurRadius = 20,
+                    Color = (arkServer != null)
+                    ? GetStatusColor(GetServerPlayerStatus(arkServer), true)
+                    : (Color)ColorConverter.ConvertFromString("#FF000000"), // 黑,
+                Direction = 320,
+                    ShadowDepth = 0,
+                    Opacity = 1
+                };
+            }
+        }
+
         List<Label> labelList = new List<Label>();
         private void ServerQuery()
         {
@@ -217,47 +206,7 @@ namespace ARKWatchdog
                         labelList.Clear();
                         foreach (var watchString in WatchIPList)
                         {
-                            string[] ipAndName = watchString.Split(',');
-                            GameServer arkServer = GetServerInfo(ipAndName[0]);
-                            string name = ipAndName[1];
-                            string serverContent = "";
-                            Brush foregroundColor = new SolidColorBrush();
-                            Color shadowColor = new Color();
-                            if (arkServer != null)
-                            {
-                                serverContent = name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n";
-                                foregroundColor = new SolidColorBrush(GetStatusColor(GetServerPlayerStatus(arkServer), false));
-                                shadowColor = GetStatusColor(GetServerPlayerStatus(arkServer), true);
-                            }
-                            else
-                            {
-                                serverContent = name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
-                                foregroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
-                                shadowColor = (Color)ColorConverter.ConvertFromString("#FF000000"); // 黑
-                            }
-                            Label svLabel = new Label()
-                            {
-                                Content = serverContent,
-                                FontSize = 20,
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                HorizontalContentAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Foreground = foregroundColor,
-                                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00000000")),
-                                BorderBrush = new SolidColorBrush(Colors.Black),
-                                FontStretch = FontStretches.SemiCondensed,
-                                FontWeight = FontWeights.Bold,
-                                Margin = new Thickness(45, 0, 492, 0),
-                                Opacity = 1,
-                                Effect = new DropShadowEffect
-                                {
-                                    BlurRadius = 20,
-                                    Color = shadowColor,
-                                    Direction = 320,
-                                    ShadowDepth = 0,
-                                    Opacity = 1
-                                }
-                            };
+                            ServerLabel svLabel = new ServerLabel(watchString);
                             svLabel.MouseLeftButtonDown += ClickDrag;
                             labelList.Add(svLabel);
                             SizeToContent = SizeToContent.WidthAndHeight;

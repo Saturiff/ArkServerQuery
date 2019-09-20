@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
-
+// TODO: 二分搜尋法
 namespace ARKServerQuery
 {
     public static class ServerQuery
@@ -31,7 +31,7 @@ namespace ARKServerQuery
             GameServer arkServer;
             try { arkServer = new GameServer(new IPEndPoint(IPAddress.Parse(ip), port)); }
             catch { return null; }
-            return (arkServer.connectStatus) ? arkServer : null;
+            return arkServer.connectStatus ? arkServer : null;
         }
         // 將回傳的GameServer寫入Collection
         private static void SearchServerInfo(ServerInfo sv) => arkSvCollection.Add(sv, GetServerInfo(sv.ip, sv.port));
@@ -42,10 +42,10 @@ namespace ARKServerQuery
             searchThreadList.Clear();
             arkSvCollection.Clear();
             Thread searchThread;
-            bool emptyString = inString == string.Empty;
+            bool isEmptyString = inString == string.Empty;
             serverInfoList.ForEach(sv =>
             {
-                if (emptyString || sv.name.ToLower().Contains(inString.ToLower()))
+                if (isEmptyString || sv.name.ToLower().Contains(inString.ToLower()))
                 {
                     searchThread = new Thread(() => SearchServerInfo(sv));
                     searchThreadList.Add(searchThread);
