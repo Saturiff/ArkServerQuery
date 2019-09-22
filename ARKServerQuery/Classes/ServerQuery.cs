@@ -9,7 +9,7 @@ namespace ARKServerQuery
 {
     public static class ServerQuery
     {
-        // 判斷傳入字串是否為合法IP
+        // 判斷傳入字串是否為IP格式
         private static bool IsIP(string IPStr) => IPAddress.TryParse(IPStr, out _) && IPStr.Contains(".");
         
         // 查詢伺服器是否開啟，若開啟則回傳GameServer類型值，否則回傳null
