@@ -12,7 +12,7 @@ namespace ARKWatchdog
 {
     public class ServerLabel : Label
     {
-        public ServerLabel(string watchString, MouseButtonEventHandler ClickDrag)
+        public ServerLabel(string watchString, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)
         {
             string[] ipAndName = watchString.Split(',');
             GameServer arkServer = GetServerInfo(ipAndName[0]);
@@ -21,7 +21,7 @@ namespace ARKWatchdog
             Content = (arkServer != null)
                 ? name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n"
                 : name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
-            FontSize = 20;
+            FontSize = gFontSize;
             HorizontalAlignment = HorizontalAlignment.Left;
             HorizontalContentAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
@@ -45,6 +45,7 @@ namespace ARKWatchdog
                 Opacity = 1
             };
             MouseLeftButtonDown += ClickDrag;
+            MouseWheel += ChangeSize;
         }
 
         #region 語言

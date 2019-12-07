@@ -137,6 +137,7 @@ namespace ARKServerQuery
         private void ToggleServerWatchdog(object sender, RoutedEventArgs e)
         {
             // BUG: 關閉監控重啟
+            //Console.WriteLine("online? " + WatchdogOnline());
             if (!WatchdogOnline() && LocalServer.serverTread.ThreadState != ThreadState.Running)
             {
                 LocalServer.serverTread.Start();

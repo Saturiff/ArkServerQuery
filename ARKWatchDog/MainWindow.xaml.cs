@@ -96,6 +96,7 @@ namespace ARKWatchdog
         #region 查詢主計時器
         Timer QueryTimer = new Timer { Interval = 1000 };
         List<ServerLabel> labelList = new List<ServerLabel>();
+        double gFontSize = 20.0;
         private void ServerQuery()
         {
             lock (watchIPList)
@@ -106,7 +107,7 @@ namespace ARKWatchdog
                         labelList.Clear();
                         foreach (var watchString in watchIPList)
                         {
-                            ServerLabel svLabel = new ServerLabel(watchString, ClickDrag);
+                            ServerLabel svLabel = new ServerLabel(watchString, ClickDrag, ChangeSize, gFontSize);
                             labelList.Add(svLabel);
                             SizeToContent = SizeToContent.WidthAndHeight;
                         }
@@ -149,5 +150,26 @@ namespace ARKWatchdog
         }
 
         private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
+        private void ChangeSize(object sender, MouseWheelEventArgs e)
+        {
+            if(e.Delta > 0) // scrolled up/down
+            {
+                foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
+                {
+                    if (child.FontSize <= 2) break;
+                    child.FontSize += 5;
+                    gFontSize = child.FontSize;
+                }
+            }
+            else
+            {
+                foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
+                {
+                    if (child.FontSize >= int.MaxValue) break;
+                    child.FontSize -= 5;
+                    gFontSize = child.FontSize;
+                }
+            }
+        }
     }
 }
