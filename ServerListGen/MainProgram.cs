@@ -72,7 +72,9 @@ namespace ServerListGen
                 sv = new GameServer(new IPEndPoint(IPAddress.Parse(onlyIP), Convert.ToInt16(p)));
                 // 紀錄ip port name
                 string name = sv.name;
-                if (!(name.Contains("PVE")
+
+                // 篩選不需要的伺服器種類後新增
+                if ( !(name.Contains("PVE")
                     || name.Contains("Tek")
                     || name.Contains("Raid")
                     || name.Contains("Small")
