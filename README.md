@@ -11,9 +11,9 @@
 |SourceQuery|與服務器進行Udp連線交換資料，改寫自 https://github.com/brycekahle/source-query-net/|
 
 
-## 操作示範
-https://youtu.be/AJW6x247SUI
-
+## 操作示範 & 可執行文件
+[Youtube](https://youtu.be/AJW6x247SUI)  
+[Ark Server Query Executable](https://github.com/reina42689/ARK-server-query-executable)  
 
 ## 撰寫環境
 > Visual studio 2019  
