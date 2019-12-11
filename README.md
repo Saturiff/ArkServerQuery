@@ -52,7 +52,7 @@ https://youtu.be/AJW6x247SUI
 │ └─SourceQuery.dll  
 └─ARKServerQuery.exe  
 
-## 最新的更新日誌 2019/12/12 10:18 am
+## 最新的更新日誌 2019/12/12
 新增了滾輪縮放文字的功能  
 
 
