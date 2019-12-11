@@ -91,8 +91,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ServerLabel.cs" />
-    <Compile Include="WindowsServices.cs" />
+    <Compile Include="Classes\ServerLabel.cs" />
+    <Compile Include="Classes\WindowsServices.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
