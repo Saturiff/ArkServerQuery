@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace ARKWatchdog
 {
-    // 讓鼠標忽略該軟件
+    // 讓鼠標忽略該軟體
     public static class WindowsServices
     {
         private const int WS_EX_TRANSPARENT = 0x00000020;
-        private const int GWL_EXSTYLE = (-20);
+        private const int GWL_EXSTYLE = -20;
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -30,7 +30,10 @@ namespace ARKWatchdog
         }
 
         private static int oriStyle;
+
         private static int transparentStyle;
+
+        // 模擬UE4 FlipFlop節點
         private static bool isA;
     }
 }

@@ -10,6 +10,19 @@ using System.Windows.Media.Effects;
 
 namespace ARKWatchdog
 {
+    /* ServerLabel 繼承自 Label ，實例化時即可保存伺服器資訊
+     * 建構子必要參數:
+     * watchString -> 由ASQ接收而來的伺服器字串，預設格式為 " IP:PORT,伺服器名稱 "
+     * ClickDrag   -> 拖曳視窗事件
+     * ChangeSize  -> 改變文字大小事件
+     * gFontSize   -> 欲顯示的文字大小
+     * ----------------------------------------------------------------------
+     * 流程:
+     * 實例化 GameServer 嘗試訪問目標伺服器
+     * 設定顯示內容與格式
+     * 若 GameServer 為 null ，則顯示訪問失敗字串; 若不為 null 則顯示實時玩家人數
+     * 依照玩家人數改變字體顏色(0-29, 29-59, 60-)
+     */
     public class ServerLabel : Label
     {
         public ServerLabel(string watchString, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)

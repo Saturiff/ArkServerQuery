@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace ServerListGen
 {
-    class Program
+    class MainProgram
     {
         public class ServerInfo
         {
