@@ -52,7 +52,7 @@ https://youtu.be/AJW6x247SUI
 │ └─SourceQuery.dll  
 └─ARKServerQuery.exe  
 
-## 最新的更新日誌 2019/09/16 10:18 am
-已可支援多國語言 ( 目前為繁中、簡中、英文 )
+## 最新的更新日誌 2019/12/12 10:18 am
+新增了滾輪縮放文字的功能  
 
 

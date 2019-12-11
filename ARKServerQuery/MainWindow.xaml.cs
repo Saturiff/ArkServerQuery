@@ -136,7 +136,7 @@ namespace ARKServerQuery
         // 對監控介面傳遞伺服器資訊，若是第一次執行則開啟監控介面
         private void ToggleServerWatchdog(object sender, RoutedEventArgs e)
         {
-            // BUG: 關閉監控重啟
+            // BUG: 關閉監控重啟時崩潰
             //Console.WriteLine("online? " + WatchdogOnline());
             if (!WatchdogOnline() && LocalServer.serverTread.ThreadState != ThreadState.Running)
             {
