@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 
-namespace ARKWatchdog
+namespace ARKServerQuery
 {
     /* ServerLabel 繼承自 Label ，實例化時即可保存伺服器資訊
      * 建構子必要參數:

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,33 +9,25 @@ using System.Windows.Media;
 using ThreadState = System.Threading.ThreadState;
 using Timer = System.Windows.Forms.Timer;
 
-namespace ARKWatchdog
+namespace ARKServerQuery
 {
-    public partial class MainWindow : Window
+    public partial class Watchdog : Window
     {
         #region 視窗初始化
-
-        public MainWindow()
+        
+        public Watchdog()
         {
             InitializeComponent();
-            CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
+            CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering); // 用於鍵盤綁定
             Content = mainPanel;
-            Thread localSvThread = new Thread(LocalClient); // Thread: 本地TCP，處理ASQ(ARKServerQuery)的訊號
-            localSvThread.Start();
             InitQuery();
         }
-
+        
         // 裝伺服器資訊(ServerLabel型態)的主要容器
         private StackPanel mainPanel = new StackPanel();
-
-        private void InitQuery()
-        {
-            QueryTimer.Tick += new EventHandler(QueryTick);
-            QueryTimer.Start();
-        }
-
+                
         #endregion
-
+        
         #region 鍵盤綁定
         // Hook全域鍵盤，在該視窗重新渲染時執行
         private void CompositionTarget_Rendering(object sender, EventArgs e)
@@ -54,7 +43,7 @@ namespace ARKWatchdog
                 ToggleManipulateWindow(KeyStates.None);
             }
         }
-
+        
         // 初始化時將目前視窗參數儲存
         private IntPtr hwnd;
         protected override void OnSourceInitialized(EventArgs e)
@@ -63,77 +52,67 @@ namespace ARKWatchdog
             hwnd = new WindowInteropHelper(this).Handle;
             WindowsServices.SetOriStyle(hwnd);
         }
-
+        
         #endregion
-
-        #region 本地客戶端
-
+        
+        #region 與主UI的通訊
+        
         // 儲存ASQ傳來的伺服器IP位址
         private List<string> watchIPList = new List<string>();
-
-        private void LocalClient()
+        
+        public void Message(string msg)
         {
-            TcpClient client;
-            BinaryReader br;
-            client = new TcpClient("127.0.0.1", 18500); // 使用本地port18500與ASQ進行TCP傳輸
-            while (true)
+            if (msg == "_disable")
             {
-                if (Process.GetProcessesByName("ARKServerQuery").Length == 0) // ASQ關閉時自行結束
+                watchIPList.Clear();
+            }
+            else if (msg == "_visi") ToggleVisibility();
+            else if (msg.Substring(0, 6) == "_lang,") ServerLabel.UpdateLanguage(msg.Substring(6, 5));
+            else
+            {
+                lock (watchIPList)
                 {
-                    Close();
-                    Environment.Exit(Environment.ExitCode);
+                    if (!watchIPList.Contains(msg)) watchIPList.Add(msg);
+                    else if (watchIPList.Contains(msg)) watchIPList.Remove(msg);
                 }
-                /* 嘗試接收ASQ的訊息
-                 * _disable ASQ按下了「取消監控」 -> 清空已儲存的IP
-                 * _visi    ASQ按下了「隱藏監控」 -> 隱藏文字
-                 * _lang,   ASQ更改語言          -> 文字切割後改變為指定語言
-                 * else     ASQ傳遞了伺服器位址   -> 不在清單內 => 新增 or 在清單內 => 移除
-                 */
-                try
-                {
-                    NetworkStream clientStream = client.GetStream();
-                    br = new BinaryReader(clientStream);
-                    string receive = string.Empty;
-                    receive = br.ReadString();
-                    if (receive == "_disable")
-                    {
-                        watchIPList.Clear();
-                    }
-                    else if (receive == "_visi") ToggleVisibility();
-                    else if (receive.Substring(0, 6) == "_lang,") ServerLabel.UpdateLanguage(receive.Substring(6, 5));
-                    else
-                    {
-                        lock (watchIPList)
-                        {
-                            if (!watchIPList.Contains(receive)) watchIPList.Add(receive);
-                            else if (watchIPList.Contains(receive)) watchIPList.Remove(receive);
-                        }
-                    }
-                }
-                catch { }
             }
         }
+
+        private bool textVisible = true;
+        private void ToggleVisibility()
+        {
+            if (textVisible) Show();
+            else Hide();
+            textVisible = !textVisible;
+        }
+
         #endregion
 
         #region 查詢主計時器
 
-        // 線程: 訪問陣列中的伺服器後更新文字
-        Thread textUpdate;
-        private void QueryTick(object sender, EventArgs e)
+        // 每秒訪問一次清單中的伺服器
+        Timer QueryTimer = new Timer { Interval = 1000 };
+        private void InitQuery()
         {
-            if (textUpdate == null || textUpdate.ThreadState != ThreadState.Running)
-            {
-                textUpdate = new Thread(ServerQuery);
-                textUpdate.Start();
-            }
+            QueryTimer.Tick += new EventHandler(QueryTick);
+            QueryTimer.Start();
         }
 
-        Timer QueryTimer = new Timer { Interval = 1000 };
-
+        // 線程: 訪問陣列中的伺服器後更新文字
+        Thread mainQueryThread;
+        private void QueryTick(object sender, EventArgs e)
+        {
+            if (mainQueryThread == null || mainQueryThread.ThreadState != ThreadState.Running)
+            {
+                mainQueryThread = new Thread(ServerQuery);
+                mainQueryThread.Start();
+            }
+        }
+        
         List<ServerLabel> labelList = new List<ServerLabel>();
-
+        
         double gFontSize = 20.0;
-
+        
         /* 伺服器訪問步驟:
          * 1. 清空目前「需顯示的伺服器清單」
          * 2. 為每一組IP實例化一個ServerLabel類別
@@ -161,23 +140,15 @@ namespace ARKWatchdog
                     else mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
                 });
         }
-
+        
         #endregion
-
-        #region 隱藏文字
-
-        private bool textVisible = true;
-
-        private void ToggleVisibility() => textVisible = textVisible ? false : true;
-
-        #endregion
-
+        
         #region 鍵盤/滑鼠與程式間的交互
-
+        
         private bool canManipulateWindow = false;
-
+        
         private KeyStates gKeyStates = KeyStates.None;
-
+        
         private void ToggleManipulateWindow(KeyStates inKeyStates)
         {
             /* None -> Down, Down -> None : 改變可操縱視窗狀態並保存目前狀態，視窗可移動時將停止伺服器訪問以增進使用者體驗
@@ -189,15 +160,15 @@ namespace ARKWatchdog
                 WindowsServices.SetWindowExTransparent(hwnd);
                 gKeyStates = inKeyStates;
                 if (canManipulateWindow) QueryTimer.Stop();
-                else                     QueryTimer.Start();
+                else QueryTimer.Start();
             }
         }
-
+        
         private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
-
+        
         private void ChangeSize(object sender, MouseWheelEventArgs e)
         {
-            if(e.Delta > 0) // 滾輪向上放大字體，反之縮小字體
+            if (e.Delta > 0) // 滾輪向上放大字體，反之縮小字體
             {
                 foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
                 {
@@ -216,7 +187,7 @@ namespace ARKWatchdog
                 }
             }
         }
-
+        
         #endregion
     }
 }

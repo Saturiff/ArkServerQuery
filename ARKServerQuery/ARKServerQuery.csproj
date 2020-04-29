@@ -101,9 +101,13 @@
     </ApplicationDefinition>
     <Compile Include="Classes\ArkServerCollection.cs" />
     <Compile Include="Classes\BindingProxy.cs" />
-    <Compile Include="Classes\LocalServer.cs" />
     <Compile Include="Classes\ServerInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Classes\ServerLabel.cs" />
+    <Compile Include="Classes\WindowsServices.cs" />
+    <Compile Include="Watchdog.xaml.cs">
+      <DependentUpon>Watchdog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Lang\en-us.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,6 +133,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Watchdog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

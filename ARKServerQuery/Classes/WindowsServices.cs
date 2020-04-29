@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ARKWatchdog
+namespace ARKServerQuery
 {
-    // 讓鼠標忽略該軟體
+    // 讓游標忽略該軟體
     public static class WindowsServices
     {
         private const int WS_EX_TRANSPARENT = 0x00000020;

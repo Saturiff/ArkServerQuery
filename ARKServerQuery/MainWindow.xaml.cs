@@ -5,12 +5,12 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ThreadState = System.Threading.ThreadState;
 
 namespace ARKServerQuery
 {
-    [Serializable]
     public enum LanguageList { zh_tw, zh_cn, en_us }
+
+    [Serializable]
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -19,20 +19,23 @@ namespace ARKServerQuery
             InitializeLanguageString();
             ShowButton(false);
             ServerQuery.InitServerList();
-            LocalServer.InitLocalServer();
+            InitWatchdog();
         }
-
+        
         #region 本地化
+
         private static LanguageList currentLanguage = LanguageList.zh_tw;
+
         private void UpdateWatchdogLanguage()
         {
             if (currentLanguage == LanguageList.zh_tw)
-                LocalServer.Send("_lang,zh_tw");
+                watchdog.Message("_lang,zh_tw");
             else if (currentLanguage == LanguageList.zh_cn)
-                LocalServer.Send("_lang,zh_cn");
+                watchdog.Message("_lang,zh_cn");
             else if (currentLanguage == LanguageList.en_us)
-                LocalServer.Send("_lang,en_us");
+                watchdog.Message("_lang,en_us");
         }
+
         private void UpdateMapListLanguage()
         {
             if (currentLanguage == LanguageList.zh_tw)
@@ -42,6 +45,7 @@ namespace ARKServerQuery
             else if (currentLanguage == LanguageList.en_us)
                 Lable_Maps.Content = "Maps:\nTheIsland\t\tAberration\t\nTheCenter\t\tExtinction\t\nScorchedEarth\t";
         }
+
         private void LoadLanguageFile(string languagefileName)
         {
             Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary()
@@ -49,7 +53,6 @@ namespace ARKServerQuery
                 Source = new Uri(languagefileName, UriKind.RelativeOrAbsolute)
             };
         }
-        
         
         private void InitializeLanguageString()
         {
@@ -100,7 +103,7 @@ namespace ARKServerQuery
             
             Settings.Default.customLanguage = currentLanguage;
             Settings.Default.Save();
-            if (WatchdogOnline()) UpdateWatchdogLanguage();
+            UpdateWatchdogLanguage();
         }
         #endregion
 
@@ -133,31 +136,12 @@ namespace ARKServerQuery
             Process.Start("steam://connect/" + watchIP);
         }
 
-        // 對監控介面傳遞伺服器資訊，若是第一次執行則開啟監控介面
-        private void ToggleServerWatchdog(object sender, RoutedEventArgs e)
-        {
-            // BUG: 關閉監控重啟時崩潰
-            //Console.WriteLine("online? " + WatchdogOnline());
-            if (!WatchdogOnline() && LocalServer.serverTread.ThreadState != ThreadState.Running)
-            {
-                LocalServer.serverTread.Start();
-                Process.Start(@"bin\ARKWatchdog.exe");
-                Thread.Sleep(1000);
-            }
-            object watchdogStr = ((Button)sender).CommandParameter;
-            LocalServer.Send(Convert.ToString(watchdogStr));
-            UpdateWatchdogLanguage();
-        }
-
         // 顯示地圖名稱
         private void ToggleMaps()
         {
             WP_BottomButtonWarp.Visibility  = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Hidden : Visibility.Visible;
             Lable_Maps.Visibility           = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
         }
-
-        // 檢測監控介面是否存在
-        private bool WatchdogOnline() => Process.GetProcessesByName("ARKWatchdog").Length > 0;
 
         // 對搜尋狀態做按鈕的調整
         private void IsSearching(bool newStatus)
@@ -171,18 +155,32 @@ namespace ARKServerQuery
         private void ShowButton(bool show) => Min_button.Opacity = show ? 1 : 0;
         #endregion
 
+        #region 監控控制(watchdog)
+
+        Watchdog watchdog;
+        private void InitWatchdog()
+        {
+            watchdog = new Watchdog();
+            watchdog.Show();
+        }
+
+
+        // 對監控介面傳遞伺服器資訊
+        private void ToggleServerWatchdog(object sender, RoutedEventArgs e)
+        {
+            object watchdogStr = ((Button)sender).CommandParameter;
+            watchdog.Message(Convert.ToString(watchdogStr));
+            UpdateWatchdogLanguage();
+        }
+
+        #endregion
+
         #region 所有按鈕事件
         private void ClickMin(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
         private void ClickExit(object sender, RoutedEventArgs e)
         {
-            Process[] processes = Process.GetProcessesByName("ARKWatchdog");
-            foreach(var p in processes)
-            {
-                p.WaitForExit(1000);
-                p.CloseMainWindow();
-            }
-
+            watchdog.Close();
             Close();
             Environment.Exit(Environment.ExitCode);
         }
@@ -218,12 +216,12 @@ namespace ARKServerQuery
 
         private void ClickDisableAllWatch(object sender, RoutedEventArgs e)
         {
-            if (WatchdogOnline()) LocalServer.Send("_disable");
+            watchdog.Message("_disable");
         }
 
         private void ClickWatchVisibility(object sender, RoutedEventArgs e)
         {
-            if (WatchdogOnline()) LocalServer.Send("_visi");
+            watchdog.Message("_visi");
         }
         #endregion
     }
