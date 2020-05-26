@@ -13,7 +13,7 @@
         Height="305.65" 
         ResizeMode="NoResize">
 
-    <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0" >
+    <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0" MouseLeftButtonUp="DragStatusDetect" >
 
         <!-- 語言切換 -->
         <WrapPanel HorizontalAlignment="Left" Height="auto" Width="auto" Margin="13,7,0,0" VerticalAlignment="Top">
@@ -121,7 +121,6 @@
                         BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Width="auto" Margin="50,0,0,0" IsEnabled="False"/>
 
         </WrapPanel>
-
-
+        
     </Grid>
 </Window>

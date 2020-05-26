@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,7 +90,7 @@ namespace ARKServerQuery
         #region 查詢主計時器
 
         // 每秒訪問一次清單中的伺服器
-        Timer QueryTimer = new Timer { Interval = 1000 };
+        private Timer QueryTimer = new Timer { Interval = 1000 };
         private void InitQuery()
         {
             QueryTimer.Tick += new EventHandler(QueryTick);
@@ -105,6 +106,12 @@ namespace ARKServerQuery
                 mainQueryThread = new Thread(ServerQuery);
                 mainQueryThread.Start();
             }
+        }
+
+        public void EnableQueryTimer(bool enable)
+        {
+            if (enable) QueryTimer.Start();
+            else QueryTimer.Stop();
         }
 
         List<ServerLabel> labelList = new List<ServerLabel>();
@@ -145,33 +152,40 @@ namespace ARKServerQuery
         {
             return watchIPList.Count;
         }
-        
-        // private void _ServerQuery()
-        // {
-        //     lock (watchIPList)
-        //     {
-        //         Dispatcher.Invoke(() =>
-        //         {
-        //             // 檢查數量差距
-        //             int offset = GetServerListCount() - GetServerDisplayCount();
-        // 
-        //             // 更新數量
-        //             if (offset > 0)
-        //                 for (int i = 0; i < offset; i++) labelList.Add(new ServerLabel(string.Empty, ClickDrag, ChangeSize, gFontSize));
-        //             else if (offset < 0)
-        //                 for (int i = 0; i < Math.Abs(offset); i++) labelList.RemoveAt(GetServerListCount() - 1);
-        // 
-        //             // 更新顯示的伺服器
-        //             foreach (var watchString in watchIPList)
-        //                 labelList.ForEach(x => x.UpdateInfo(watchString));
-        // 
-        //             SizeToContent = SizeToContent.WidthAndHeight;
-        //             
-        //             mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
-        //             foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
-        //         });
-        //     }
-        // }
+
+        // 避免重複建立過多物件解決方案
+        private void _ServerQuery()
+        {
+            lock (watchIPList)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    // 檢查數量差距
+                    int offset = GetServerListCount() - GetServerDisplayCount();
+
+                    // 更新數量
+                    if (offset > 0)
+                        for (int i = 0; i < offset; i++) labelList.Add(new ServerLabel(string.Empty, ClickDrag, ChangeSize, gFontSize));
+                    else if (offset < 0)
+                        for (int i = 0; i < Math.Abs(offset); i++) labelList.RemoveAt(GetServerListCount() - 1);
+
+                    // 更新顯示的伺服器
+                    // for (int i = 0; i < GetServerDisplayCount(); i++) 
+                    //     labelList.ElementAt(i).UpdateInfo(watchIPList.ElementAt(i));
+
+                    int cnt = 0;
+                    labelList.ForEach(x => x.UpdateInfo(watchIPList.ElementAt(cnt++)));
+
+                    cnt = 0;
+                    foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
+                        child.UpdateInfo(watchIPList.ElementAt(cnt++));
+
+                    SizeToContent = SizeToContent.WidthAndHeight;
+                    // mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
+                    // foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
+                });
+            }
+        }
 
         #endregion
 

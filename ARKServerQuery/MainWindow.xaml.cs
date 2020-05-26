@@ -172,7 +172,6 @@ namespace ARKServerQuery
         private void InitWatchdog()
         {
             watchdog = new Watchdog();
-            watchdog.Show();
         }
 
         private void UpdateWatchdogVisibilityStatus()
@@ -208,9 +207,21 @@ namespace ARKServerQuery
             Environment.Exit(Environment.ExitCode);
         }
 
+        private bool isDragging = false;
         private void ClickDrag(object sender, MouseButtonEventArgs e)
         {
+            isDragging = true;
+            watchdog.EnableQueryTimer(!isDragging);
             DragMove();
+        }
+
+        private void DragStatusDetect(object sender, MouseButtonEventArgs e)
+        {
+            if (isDragging)
+            {
+                isDragging = false;
+                watchdog.EnableQueryTimer(!isDragging);
+            }
         }
 
         private void ClickShowButton(object sender, MouseEventArgs e)
@@ -255,6 +266,7 @@ namespace ARKServerQuery
         {
             UpdateWatchdogVisibilityStatus();
         }
+
         #endregion
     }
 }
