@@ -15,7 +15,6 @@
 
     <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0" >
 
-
         <!-- 語言切換 -->
         <WrapPanel HorizontalAlignment="Left" Height="auto" Width="auto" Margin="13,7,0,0" VerticalAlignment="Top">
 
@@ -62,13 +61,14 @@
 
         <!-- 伺服器列表 -->
         <WrapPanel HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Orientation="Vertical">
+            
             <DataGrid x:Name="DG_ServerList" Height="126" Width="auto" FontSize="16" Background="#00545374" Foreground="Black" 
                       HorizontalGridLinesBrush="White" VerticalGridLinesBrush="White" HorizontalAlignment="Center" VerticalAlignment="Center" AutoGenerateColumns="False" 
                       CanUserAddRows="false" FontWeight="Bold" BorderBrush="#00000000">
 
                 <DataGrid.Resources>
-                    <local:BindingProxy x:Key="DG_proxy_name" Data="{DynamicResource ServerName}"  />
-                    <local:BindingProxy x:Key="DG_proxy_players" Data="{DynamicResource Players}"     />
+                    <local:BindingProxy x:Key="DG_proxy_name" Data="{DynamicResource ServerName}"/>
+                    <local:BindingProxy x:Key="DG_proxy_players" Data="{DynamicResource Players}"/>
                 </DataGrid.Resources>
 
                 <!-- 監控、名稱、目前人數、最大人數、加入 -->
@@ -82,11 +82,11 @@
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_name}}"      Binding="{Binding name}"            Width="370"     IsReadOnly="True"/>
+                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_name}}"    Binding="{Binding name}"          Width="370"  IsReadOnly="True"/>
 
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_players}}"   Binding="{Binding currentPlayer}"   Width="auto"    IsReadOnly="True"/>
+                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_players}}" Binding="{Binding currentPlayer}" Width="auto" IsReadOnly="True"/>
 
-                    <DataGridTextColumn Header=""                                                           Binding="{Binding dgmaxPlayer}"     Width="60"      IsReadOnly="True"/>
+                    <DataGridTextColumn Header=""                                                         Binding="{Binding dgmaxPlayer}"   Width="60"   IsReadOnly="True"/>
 
                     <DataGridTemplateColumn Width="40" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>

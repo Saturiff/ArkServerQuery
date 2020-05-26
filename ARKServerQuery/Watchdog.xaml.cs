@@ -15,7 +15,7 @@ namespace ARKServerQuery
     public partial class Watchdog : Window
     {
         #region 視窗初始化
-        
+
         public Watchdog()
         {
             InitializeComponent();
@@ -23,12 +23,12 @@ namespace ARKServerQuery
             Content = mainPanel;
             InitQuery();
         }
-        
+
         // 裝伺服器資訊(ServerLabel型態)的主要容器
         private StackPanel mainPanel = new StackPanel();
-                
+
         #endregion
-        
+
         #region 鍵盤綁定
         // Hook全域鍵盤，在該視窗重新渲染時執行
         private void CompositionTarget_Rendering(object sender, EventArgs e)
@@ -42,7 +42,7 @@ namespace ARKServerQuery
             if (isKeyDown) ToggleManipulateWindow(KeyStates.Down);
             else if (isManipulatable) ToggleManipulateWindow(KeyStates.None);
         }
-        
+
         // 初始化時將目前視窗參數儲存
         private IntPtr hwnd;
         protected override void OnSourceInitialized(EventArgs e)
@@ -59,7 +59,12 @@ namespace ARKServerQuery
 
         // 儲存查詢介面傳來的伺服器IP位址
         private List<string> watchIPList = new List<string>();
-        
+
+        public bool IsWatchListEmpty()
+        {
+            return GetServerListCount() == 0;
+        }
+
         public void AddWatchList(string serverInfo)
         {
             lock (watchIPList)
@@ -77,14 +82,6 @@ namespace ARKServerQuery
         public void SetLanguage(LanguageList targetLanguage)
         {
             ServerLabel.UpdateLanguage(targetLanguage);
-        }
-
-        private bool textVisible = true;
-        public void ToggleVisibility()
-        {
-            if (textVisible) Show();
-            else Hide();
-            textVisible = !textVisible;
         }
 
         #endregion
@@ -109,11 +106,11 @@ namespace ARKServerQuery
                 mainQueryThread.Start();
             }
         }
-        
+
         List<ServerLabel> labelList = new List<ServerLabel>();
-        
+
         double gFontSize = 20.0;
-        
+
         /* 伺服器訪問步驟:
          * 1. 清空目前「需顯示的伺服器清單」
          * 2. 為每一組IP實例化一個ServerLabel類別
@@ -126,30 +123,64 @@ namespace ARKServerQuery
             lock (watchIPList)
                 Dispatcher.Invoke(() =>
                 {
-                    if (textVisible)
+                    labelList.Clear();
+                    foreach (var watchString in watchIPList)
                     {
-                        labelList.Clear();
-                        foreach (var watchString in watchIPList)
-                        {
-                            ServerLabel svLabel = new ServerLabel(watchString, ClickDrag, ChangeSize, gFontSize);
-                            labelList.Add(svLabel);
-                            SizeToContent = SizeToContent.WidthAndHeight;
-                        }
-                        mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
-                        foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
+                        ServerLabel svLabel = new ServerLabel(watchString, ClickDrag, ChangeSize, gFontSize);
+                        labelList.Add(svLabel);
+                        SizeToContent = SizeToContent.WidthAndHeight;
                     }
-                    else mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
+                    mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
+                    foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
                 });
         }
+
+        // 目前顯示的數量與目前清單的數量
+        private int GetServerDisplayCount()
+        {
+            return labelList.Count;
+        }
+
+        private int GetServerListCount()
+        {
+            return watchIPList.Count;
+        }
         
+        // private void _ServerQuery()
+        // {
+        //     lock (watchIPList)
+        //     {
+        //         Dispatcher.Invoke(() =>
+        //         {
+        //             // 檢查數量差距
+        //             int offset = GetServerListCount() - GetServerDisplayCount();
+        // 
+        //             // 更新數量
+        //             if (offset > 0)
+        //                 for (int i = 0; i < offset; i++) labelList.Add(new ServerLabel(string.Empty, ClickDrag, ChangeSize, gFontSize));
+        //             else if (offset < 0)
+        //                 for (int i = 0; i < Math.Abs(offset); i++) labelList.RemoveAt(GetServerListCount() - 1);
+        // 
+        //             // 更新顯示的伺服器
+        //             foreach (var watchString in watchIPList)
+        //                 labelList.ForEach(x => x.UpdateInfo(watchString));
+        // 
+        //             SizeToContent = SizeToContent.WidthAndHeight;
+        //             
+        //             mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
+        //             foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
+        //         });
+        //     }
+        // }
+
         #endregion
-        
+
         #region 鍵盤/滑鼠與程式間的交互
-        
+
         private bool canManipulateWindow = false;
-        
+
         private KeyStates gKeyStates = KeyStates.None;
-        
+
         private void ToggleManipulateWindow(KeyStates inKeyStates)
         {
             /* None -> Down, Down -> None : 改變可操縱視窗狀態並保存目前狀態，視窗可移動時將停止伺服器訪問以增進使用者體驗
@@ -164,9 +195,9 @@ namespace ARKServerQuery
                 else QueryTimer.Start();
             }
         }
-        
+
         private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
-        
+
         private void ChangeSize(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0) // 滾輪向上放大字體，反之縮小字體
@@ -188,7 +219,7 @@ namespace ARKServerQuery
                 }
             }
         }
-        
+
         #endregion
     }
 }

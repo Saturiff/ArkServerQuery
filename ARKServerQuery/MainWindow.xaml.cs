@@ -139,8 +139,15 @@ namespace ARKServerQuery
         // 顯示地圖名稱
         private void ToggleMaps()
         {
-            WP_BottomButtonWarp.Visibility = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Hidden : Visibility.Visible;
-            Lable_Maps.Visibility = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
+            if (WP_BottomButtonWarp.Visibility == Visibility.Hidden)
+                WP_BottomButtonWarp.Visibility = Visibility.Hidden;
+            else
+                WP_BottomButtonWarp.Visibility = Visibility.Visible;
+
+            if (Lable_Maps.Visibility == Visibility.Hidden)
+                Lable_Maps.Visibility = Visibility.Visible;
+            else
+                Lable_Maps.Visibility = Visibility.Hidden;
         }
 
         // 對搜尋狀態做按鈕的調整
@@ -168,12 +175,22 @@ namespace ARKServerQuery
             watchdog.Show();
         }
 
+        private void UpdateWatchdogVisibilityStatus()
+        {
+            if (watchdog.IsWatchListEmpty())
+                watchdog.Visibility = Visibility.Hidden;
+            else
+                watchdog.Visibility = Visibility.Visible;
+        }
+
         // 對監控介面傳遞伺服器資訊
         private void ToggleSpecificServerWatchStatus(object sender, RoutedEventArgs e)
         {
             object watchdogStr = ((Button)sender).CommandParameter;
             watchdog.AddWatchList(Convert.ToString(watchdogStr));
+
             UpdateWatchdogLanguage();
+            UpdateWatchdogVisibilityStatus();
         }
 
         #endregion
@@ -205,11 +222,11 @@ namespace ARKServerQuery
         {
             ShowButton(false);
         }
-        
+
         private Thread searchByName;
         private void TB_ServerID_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(searchByName!=null) searchByName.Abort();
+            if (searchByName != null) searchByName.Abort();
             searchByName = new Thread(SearchByName);
             searchByName.Start();
         }
@@ -236,7 +253,7 @@ namespace ARKServerQuery
 
         private void ClickWatchVisibility(object sender, RoutedEventArgs e)
         {
-            watchdog.ToggleVisibility();
+            UpdateWatchdogVisibilityStatus();
         }
         #endregion
     }
