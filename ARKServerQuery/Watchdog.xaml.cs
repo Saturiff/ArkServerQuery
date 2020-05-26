@@ -114,38 +114,12 @@ namespace ARKServerQuery
             else QueryTimer.Stop();
         }
 
-        List<ServerLabel> labelList = new List<ServerLabel>();
-
         double gFontSize = 20.0;
-
-        /* 伺服器訪問步驟:
-         * 1. 清空目前「需顯示的伺服器清單」
-         * 2. 為每一組IP實例化一個ServerLabel類別
-         * 3. 新增至「需顯示的伺服器清單」
-         * 4. 清空「目前顯示的伺服器」
-         * 5. 由更新後的「需顯示伺服器清單」新增至「目前顯示的伺服器」
-         */
-        private void ServerQuery()
-        {
-            lock (watchIPList)
-                Dispatcher.Invoke(() =>
-                {
-                    labelList.Clear();
-                    foreach (var watchString in watchIPList)
-                    {
-                        ServerLabel svLabel = new ServerLabel(watchString, ClickDrag, ChangeSize, gFontSize);
-                        labelList.Add(svLabel);
-                        SizeToContent = SizeToContent.WidthAndHeight;
-                    }
-                    mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
-                    foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
-                });
-        }
 
         // 目前顯示的數量與目前清單的數量
         private int GetServerDisplayCount()
         {
-            return labelList.Count;
+            return mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Count);
         }
 
         private int GetServerListCount()
@@ -153,38 +127,32 @@ namespace ARKServerQuery
             return watchIPList.Count;
         }
 
-        // 避免重複建立過多物件解決方案
-        private void _ServerQuery()
+        /* 監控顯示步驟
+         * 1. 檢查已顯示與未顯示的物件數量差距
+         * 2. 更新數量
+         * 3. 更新已顯示的伺服器資訊
+         */
+        private void ServerQuery()
         {
             lock (watchIPList)
-            {
                 Dispatcher.Invoke(() =>
                 {
-                    // 檢查數量差距
-                    int offset = GetServerListCount() - GetServerDisplayCount();
+                    try
+                    {
+                        int offset = GetServerListCount() - GetServerDisplayCount();
+                        if (offset > 0)
+                            for (int i = 0; i < offset; i++)
+                                mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(new ServerLabel(string.Empty, ClickDrag, ChangeSize, gFontSize)));
+                        else if (offset < 0)
+                            for (int i = 0; i < Math.Abs(offset); i++)
+                                mainPanel.Dispatcher.Invoke(() => mainPanel.Children.RemoveAt(GetServerListCount() - 1));
 
-                    // 更新數量
-                    if (offset > 0)
-                        for (int i = 0; i < offset; i++) labelList.Add(new ServerLabel(string.Empty, ClickDrag, ChangeSize, gFontSize));
-                    else if (offset < 0)
-                        for (int i = 0; i < Math.Abs(offset); i++) labelList.RemoveAt(GetServerListCount() - 1);
-
-                    // 更新顯示的伺服器
-                    // for (int i = 0; i < GetServerDisplayCount(); i++) 
-                    //     labelList.ElementAt(i).UpdateInfo(watchIPList.ElementAt(i));
-
-                    int cnt = 0;
-                    labelList.ForEach(x => x.UpdateInfo(watchIPList.ElementAt(cnt++)));
-
-                    cnt = 0;
-                    foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
-                        child.UpdateInfo(watchIPList.ElementAt(cnt++));
-
-                    SizeToContent = SizeToContent.WidthAndHeight;
-                    // mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Clear());
-                    // foreach (var label in labelList) mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(label));
+                        int cnt = 0;
+                        foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
+                            child.UpdateInfo(watchIPList.ElementAt(cnt++));
+                        SizeToContent = SizeToContent.WidthAndHeight;
+                    } catch { }
                 });
-            }
         }
 
         #endregion
