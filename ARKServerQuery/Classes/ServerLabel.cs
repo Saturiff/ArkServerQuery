@@ -27,16 +27,6 @@ namespace ARKServerQuery
     {
         public ServerLabel(string watchString, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)
         {
-            // string[] ipAndName = watchString.Split(',');
-            // GameServer arkServer = GetServerInfo(ipAndName[0]);
-            // string name = ipAndName[1];
-            // 
-            // if (arkServer != null)
-            //     Content = name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer
-            //         + " / " + arkServer.maxPlayer + "\n";
-            // else
-            //     Content = name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
-
             if (watchString != string.Empty) UpdateInfo(watchString);
 
             HorizontalAlignment = HorizontalAlignment.Left;
@@ -45,21 +35,8 @@ namespace ARKServerQuery
             Margin = new Thickness(45, 0, 492, 0);
 
             Opacity = 1;
-            // Foreground = new SolidColorBrush((arkServer != null)
-            //     ? GetStatusColor(GetServerPlayerStatus(arkServer), false)
-            //     : (Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
             Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00000000"));
             BorderBrush = new SolidColorBrush(Colors.Black);
-            // Effect = new DropShadowEffect
-            // {
-            //     BlurRadius = 20,
-            //     Color = (arkServer != null)
-            //     ? GetStatusColor(GetServerPlayerStatus(arkServer), true)
-            //     : (Color)ColorConverter.ConvertFromString("#FF000000"), // 黑,
-            //     Direction = 320,
-            //     ShadowDepth = 0,
-            //     Opacity = 1
-            // };
 
             FontSize = gFontSize;
             FontStretch = FontStretches.SemiCondensed;
