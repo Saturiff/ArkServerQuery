@@ -11,6 +11,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace ARKServerQuery
 {
+    // 監控介面
     public partial class Watchdog : Window
     {
         #region 視窗初始化
@@ -32,16 +33,14 @@ namespace ARKServerQuery
         // Hook全域鍵盤，在該視窗重新渲染時執行
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
-            bool isKeyDown = ((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.Down) > 0) || ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.Down) > 0);
-            bool isManipulatable = (((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.None) == 0) || ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.None) == 0)) && canManipulateWindow;
-            if (isKeyDown)
-            {
-                ToggleManipulateWindow(KeyStates.Down);
-            }
-            else if (isManipulatable)
-            {
-                ToggleManipulateWindow(KeyStates.None);
-            }
+            bool isKeyDown = ((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.Down) > 0) ||
+                ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.Down) > 0);
+
+            bool isManipulatable = (((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.None) == 0) ||
+                ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.None) == 0)) && canManipulateWindow;
+
+            if (isKeyDown) ToggleManipulateWindow(KeyStates.Down);
+            else if (isManipulatable) ToggleManipulateWindow(KeyStates.None);
         }
         
         // 初始化時將目前視窗參數儲存
@@ -49,37 +48,39 @@ namespace ARKServerQuery
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
+
             hwnd = new WindowInteropHelper(this).Handle;
             WindowsServices.SetOriStyle(hwnd);
         }
-        
+
         #endregion
-        
-        #region 與主UI的通訊
-        
-        // 儲存ASQ傳來的伺服器IP位址
+
+        #region 與查詢介面的通訊
+
+        // 儲存查詢介面傳來的伺服器IP位址
         private List<string> watchIPList = new List<string>();
         
-        public void Message(string msg)
+        public void AddWatchList(string serverInfo)
         {
-            if (msg == "_disable")
+            lock (watchIPList)
             {
-                watchIPList.Clear();
-            }
-            else if (msg == "_visi") ToggleVisibility();
-            else if (msg.Substring(0, 6) == "_lang,") ServerLabel.UpdateLanguage(msg.Substring(6, 5));
-            else
-            {
-                lock (watchIPList)
-                {
-                    if (!watchIPList.Contains(msg)) watchIPList.Add(msg);
-                    else if (watchIPList.Contains(msg)) watchIPList.Remove(msg);
-                }
+                if (!watchIPList.Contains(serverInfo)) watchIPList.Add(serverInfo);
+                else if (watchIPList.Contains(serverInfo)) watchIPList.Remove(serverInfo);
             }
         }
 
+        public void DisableAllWatch()
+        {
+            watchIPList.Clear();
+        }
+
+        public void SetLanguage(LanguageList targetLanguage)
+        {
+            ServerLabel.UpdateLanguage(targetLanguage);
+        }
+
         private bool textVisible = true;
-        private void ToggleVisibility()
+        public void ToggleVisibility()
         {
             if (textVisible) Show();
             else Hide();

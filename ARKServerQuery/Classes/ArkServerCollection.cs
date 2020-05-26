@@ -25,6 +25,7 @@ namespace ARKServerQuery
                 });
             }
         }
+
         // 清空伺服器Collection
         public void Clear()
         {

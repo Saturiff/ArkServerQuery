@@ -59,7 +59,7 @@ namespace ServerListGen
             sr.Close();
             Console.WriteLine("\n-- 清單創建完成 --");
 
-            Console.WriteLine("pause");
+            Console.Read();
         }
 
         private static List<string> svList = new List<string>();

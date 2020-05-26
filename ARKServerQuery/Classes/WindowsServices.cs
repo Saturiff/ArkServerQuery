@@ -18,7 +18,7 @@ namespace ARKServerQuery
         public static void SetWindowExTransparent(IntPtr hwnd)
         {
             SetWindowLong(hwnd, GWL_EXSTYLE, (isA) ? oriStyle : transparentStyle);
-            isA = (isA) ? false : true;
+            isA = isA ? false : true;
         }
 
         public static void SetOriStyle(IntPtr hwnd)
@@ -33,7 +33,6 @@ namespace ARKServerQuery
 
         private static int transparentStyle;
 
-        // 模擬UE4 FlipFlop節點
         private static bool isA;
     }
 }

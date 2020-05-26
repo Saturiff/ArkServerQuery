@@ -12,7 +12,7 @@ namespace ARKServerQuery
 {
     /* ServerLabel 繼承自 Label ，實例化時即可保存伺服器資訊
      * 建構子必要參數:
-     * watchString -> 由ASQ接收而來的伺服器字串，預設格式為 " IP:PORT,伺服器名稱 "
+     * watchString -> 由查詢介面接收而來的伺服器字串，預設格式為 " IP:PORT,伺服器名稱 "
      * ClickDrag   -> 拖曳視窗事件
      * ChangeSize  -> 改變文字大小事件
      * gFontSize   -> 欲顯示的文字大小
@@ -31,22 +31,24 @@ namespace ARKServerQuery
             GameServer arkServer = GetServerInfo(ipAndName[0]);
             string name = ipAndName[1];
 
-            Content = (arkServer != null)
-                ? name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer + " / " + arkServer.maxPlayer + "\n"
-                : name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
-            FontSize = gFontSize;
+            if (arkServer != null)
+                Content = name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer
+                    + " / " + arkServer.maxPlayer + "\n";
+            else
+                Content = name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
+
+
             HorizontalAlignment = HorizontalAlignment.Left;
             HorizontalContentAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
+            Margin = new Thickness(45, 0, 492, 0);
+
+            Opacity = 1;
             Foreground = new SolidColorBrush((arkServer != null)
                 ? GetStatusColor(GetServerPlayerStatus(arkServer), false)
                 : (Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
             Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00000000"));
             BorderBrush = new SolidColorBrush(Colors.Black);
-            FontStretch = FontStretches.SemiCondensed;
-            FontWeight = FontWeights.Bold;
-            Margin = new Thickness(45, 0, 492, 0);
-            Opacity = 1;
             Effect = new DropShadowEffect
             {
                 BlurRadius = 20,
@@ -57,30 +59,49 @@ namespace ARKServerQuery
                 ShadowDepth = 0,
                 Opacity = 1
             };
+
+            FontSize = gFontSize;
+            FontStretch = FontStretches.SemiCondensed;
+            FontWeight = FontWeights.Bold;
+
             MouseLeftButtonDown += ClickDrag;
             MouseWheel += ChangeSize;
         }
 
         #region 語言
-        public static void UpdateLanguage(string lang) => currentLanguage = lang;
 
-        protected static string currentLanguage = "zh_tw";
-        protected static readonly Dictionary<string, string> mutiLangText_PlayerText = new Dictionary<string, string>()
+        public static void UpdateLanguage(LanguageList lang)
         {
-            { "zh_tw", "人數" },
-            { "zh_cn", "人数" },
-            { "en_us", "Players" }
-        };
-        protected static readonly Dictionary<string, string> mutiLangText_QueryFailed = new Dictionary<string, string>()
+            currentLanguage = lang;
+        }
+
+        protected static LanguageList currentLanguage = LanguageList.zh_tw;
+
+        protected static readonly Dictionary<LanguageList, string> mutiLangText_PlayerText = new Dictionary<LanguageList, string>()
         {
-            { "zh_tw", "伺服器訪問失敗" },
-            { "zh_cn", "服务器访问失败" },
-            { "en_us", "Server query failed" }
+            { LanguageList.zh_tw, "人數" },
+            { LanguageList.zh_cn, "人数" },
+            { LanguageList.en_us, "Players" }
         };
+
+        protected static readonly Dictionary<LanguageList, string> mutiLangText_QueryFailed = new Dictionary<LanguageList, string>()
+        {
+            { LanguageList.zh_tw, "伺服器訪問失敗" },
+            { LanguageList.zh_cn, "服务器访问失败" },
+            { LanguageList.en_us, "Server query failed" }
+        };
+
         #endregion
 
-        protected static string GetIP(string fullIP)  => Convert.ToString(fullIP.Split(':')[0]);
-        protected static int GetPort(string fullIP)   => Convert.ToInt16 (fullIP.Split(':')[1]);
+        protected static string GetIP(string fullIP)
+        {
+            return Convert.ToString(fullIP.Split(':')[0]);
+        }
+
+        protected static int GetPort(string fullIP)
+        {
+            return Convert.ToInt16(fullIP.Split(':')[1]);
+        }
 
         protected static GameServer GetServerInfo(string _fullIP)
         {
@@ -105,17 +126,25 @@ namespace ARKServerQuery
                 else
                     return (Color)ColorConverter.ConvertFromString("#FFA80000"); // 紅
             }
-            else return (Color)ColorConverter.ConvertFromString((status == ServerPlayerStatus.Safe || status == ServerPlayerStatus.Warning) ? "#FF000000" : "#FFA85C00");
+            else
+            {
+                if (status == ServerPlayerStatus.Safe || status == ServerPlayerStatus.Warning)
+                    return (Color)ColorConverter.ConvertFromString("#FF000000");
+                else
+                    return (Color)ColorConverter.ConvertFromString("#FFA85C00");
+            }
         }
 
         protected static ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
         {
-            if (sv.currentPlayer < 30) return ServerPlayerStatus.Safe;
-            else if (sv.currentPlayer > 29 && sv.currentPlayer < 60) return ServerPlayerStatus.Warning;
-            else return ServerPlayerStatus.Danger;
+            if (sv.currentPlayer < 30) 
+                return ServerPlayerStatus.Safe;
+            else if (sv.currentPlayer > 29 && sv.currentPlayer < 60) 
+                return ServerPlayerStatus.Warning;
+            else 
+                return ServerPlayerStatus.Danger;
         }
 
         protected enum ServerPlayerStatus { Safe, Warning, Danger }
-
     }
 }

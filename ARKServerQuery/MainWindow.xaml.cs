@@ -10,30 +10,24 @@ namespace ARKServerQuery
 {
     public enum LanguageList { zh_tw, zh_cn, en_us }
 
-    [Serializable]
+    // 查詢介面
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
             InitializeLanguageString();
-            ShowButton(false);
             ServerQuery.InitServerList();
             InitWatchdog();
         }
-        
+
         #region 本地化
 
         private static LanguageList currentLanguage = LanguageList.zh_tw;
 
         private void UpdateWatchdogLanguage()
         {
-            if (currentLanguage == LanguageList.zh_tw)
-                watchdog.Message("_lang,zh_tw");
-            else if (currentLanguage == LanguageList.zh_cn)
-                watchdog.Message("_lang,zh_cn");
-            else if (currentLanguage == LanguageList.en_us)
-                watchdog.Message("_lang,en_us");
+            watchdog.SetLanguage(currentLanguage);
         }
 
         private void UpdateMapListLanguage()
@@ -53,7 +47,7 @@ namespace ARKServerQuery
                 Source = new Uri(languagefileName, UriKind.RelativeOrAbsolute)
             };
         }
-        
+
         private void InitializeLanguageString()
         {
             // setting 預設值
@@ -100,7 +94,7 @@ namespace ARKServerQuery
                 currentLanguage = LanguageList.en_us;
             }
             if (Lable_Maps != null) UpdateMapListLanguage();
-            
+
             Settings.Default.customLanguage = currentLanguage;
             Settings.Default.Save();
             UpdateWatchdogLanguage();
@@ -112,9 +106,15 @@ namespace ARKServerQuery
         private void SearchByName()
         {
             string inString = TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text);
-            if (inString.Length > 1)                                                        ServerQuery.ListSearch(inString);
-            else if (TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text == string.Empty)) ServerQuery.arkSvCollection.Clear();
-            
+            if (inString.Length > 1)
+            {
+                ServerQuery.ListSearch(inString);
+            }
+            else if (TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text == string.Empty))
+            {
+                ServerQuery.arkSvCollection.Clear();
+            }
+
             DG_ServerList.Dispatcher.Invoke(() => DG_ServerList.ItemsSource = ArkServerCollection.collection);
         }
 
@@ -139,23 +139,27 @@ namespace ARKServerQuery
         // 顯示地圖名稱
         private void ToggleMaps()
         {
-            WP_BottomButtonWarp.Visibility  = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Hidden : Visibility.Visible;
-            Lable_Maps.Visibility           = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
+            WP_BottomButtonWarp.Visibility = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Hidden : Visibility.Visible;
+            Lable_Maps.Visibility = Lable_Maps.Visibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
         }
 
         // 對搜尋狀態做按鈕的調整
         private void IsSearching(bool newStatus)
         {
-            TB_ServerID.Dispatcher.Invoke   (() => TB_ServerID.IsEnabled    = !newStatus);
-            B_Start_Load.Dispatcher.Invoke  (() => B_Start_Load.IsEnabled   = !newStatus);
-            B_Stop_Load.Dispatcher.Invoke   (() => B_Stop_Load.IsEnabled    =  newStatus);
+            TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.IsEnabled = !newStatus);
+            B_Start_Load.Dispatcher.Invoke(() => B_Start_Load.IsEnabled = !newStatus);
+            B_Stop_Load.Dispatcher.Invoke(() => B_Stop_Load.IsEnabled = newStatus);
         }
 
         // 顯示最小化按鈕
-        private void ShowButton(bool show) => Min_button.Opacity = show ? 1 : 0;
+        private void ShowButton(bool show)
+        {
+            Min_button.Opacity = show ? 1 : 0;
+        }
+
         #endregion
 
-        #region 監控控制(watchdog)
+        #region 伺服器人數即時監控浮動文字(watchdog)
 
         Watchdog watchdog;
         private void InitWatchdog()
@@ -164,19 +168,21 @@ namespace ARKServerQuery
             watchdog.Show();
         }
 
-
         // 對監控介面傳遞伺服器資訊
-        private void ToggleServerWatchdog(object sender, RoutedEventArgs e)
+        private void ToggleSpecificServerWatchStatus(object sender, RoutedEventArgs e)
         {
             object watchdogStr = ((Button)sender).CommandParameter;
-            watchdog.Message(Convert.ToString(watchdogStr));
+            watchdog.AddWatchList(Convert.ToString(watchdogStr));
             UpdateWatchdogLanguage();
         }
 
         #endregion
 
-        #region 所有按鈕事件
-        private void ClickMin(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        #region 按鈕事件
+        private void ClickMin(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
 
         private void ClickExit(object sender, RoutedEventArgs e)
         {
@@ -185,11 +191,20 @@ namespace ARKServerQuery
             Environment.Exit(Environment.ExitCode);
         }
 
-        private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
+        private void ClickDrag(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
 
-        private void ClickShowButton(object sender, MouseEventArgs e) => ShowButton(true);
+        private void ClickShowButton(object sender, MouseEventArgs e)
+        {
+            ShowButton(true);
+        }
 
-        private void ClickHideButton(object sender, MouseEventArgs e) => ShowButton(false);
+        private void ClickHideButton(object sender, MouseEventArgs e)
+        {
+            ShowButton(false);
+        }
         
         private Thread searchByName;
         private void TB_ServerID_TextChanged(object sender, TextChangedEventArgs e)
@@ -216,12 +231,12 @@ namespace ARKServerQuery
 
         private void ClickDisableAllWatch(object sender, RoutedEventArgs e)
         {
-            watchdog.Message("_disable");
+            watchdog.DisableAllWatch();
         }
 
         private void ClickWatchVisibility(object sender, RoutedEventArgs e)
         {
-            watchdog.Message("_visi");
+            watchdog.ToggleVisibility();
         }
         #endregion
     }
