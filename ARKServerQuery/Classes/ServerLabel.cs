@@ -61,13 +61,13 @@ namespace ARKServerQuery
         public ServerInfo serverInfo;
         private void UpdateTick(object sender, EventArgs e)
         {
-            if(serverInfo != null) UpdateContent();
+            if (serverInfo != null) UpdateContent();
         }
-        
+
         private GameServer arkServer;
         public async void UpdateContent()
         {
-            arkServer = await GetServerInfo(serverInfo);
+            arkServer = await GetServerInfo();
             string name = serverInfo.name;
 
             if (arkServer != null)
@@ -76,28 +76,26 @@ namespace ARKServerQuery
             else
                 Content = name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
 
-            Foreground = new SolidColorBrush((arkServer != null)
-                ? GetStatusColor(GetServerPlayerStatus(arkServer), false)
-                : (Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
+            Foreground = new SolidColorBrush((arkServer != null) ? GetStatusColor(GetServerPlayerStatus(arkServer), false)
+                                                                 : (Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
 
             Effect = new DropShadowEffect
             {
                 BlurRadius = 20,
-                Color = (arkServer != null)
-                ? GetStatusColor(GetServerPlayerStatus(arkServer), true)
-                : (Color)ColorConverter.ConvertFromString("#FF000000"), // 黑,
+                Color = (arkServer != null) ? GetStatusColor(GetServerPlayerStatus(arkServer), true)
+                                            : (Color)ColorConverter.ConvertFromString("#FF000000"), // 黑,
                 Direction = 320,
                 ShadowDepth = 0,
                 Opacity = 1
             };
         }
 
-        private Task<GameServer> GetServerInfo(ServerInfo serverInfo)
+        private Task<GameServer> GetServerInfo()
         {
-            return Task.Factory.StartNew(() => TryGetGameServer(serverInfo));
+            return Task.Factory.StartNew(() => TryGetGameServer());
         }
 
-        private GameServer TryGetGameServer(ServerInfo serverInfo)
+        private GameServer TryGetGameServer()
         {
             GameServer sv;
             try { sv = new GameServer(new IPEndPoint(IPAddress.Parse(serverInfo.ip), serverInfo.port)); }

@@ -9,7 +9,7 @@ using System.Windows.Input;
 namespace ARKServerQuery
 {
     public enum LanguageList { zh_tw, zh_cn, en_us }
-    
+
     // 查詢介面
     public partial class MainWindow : Window
     {
@@ -126,6 +126,7 @@ namespace ARKServerQuery
             DG_ServerList.Dispatcher.Invoke(() => DG_ServerList.ItemsSource = ArkServerCollection.collection);
             IsSearching(false);
         }
+
         #endregion
 
         #region 伺服器清單
@@ -133,7 +134,7 @@ namespace ARKServerQuery
         private void JoinServer(object sender, RoutedEventArgs e)
         {
             object serverInfoObject = ((Button)sender).CommandParameter;
-            Process.Start("steam://connect/" + 
+            Process.Start("steam://connect/" +
                 ((ServerInfo)serverInfoObject).ip + Convert.ToString(((ServerInfo)serverInfoObject).port));
         }
 
