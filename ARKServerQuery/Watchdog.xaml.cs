@@ -59,25 +59,25 @@ namespace ARKServerQuery
         #region 與查詢介面的通訊
 
         // 儲存查詢介面傳來的伺服器IP位址
-        private List<string> watchIPList = new List<string>();
+        private List<ServerInfo> serverInfoList = new List<ServerInfo>();
 
         public bool IsWatchListEmpty()
         {
             return GetServerListCount() == 0;
         }
 
-        public void AddWatchList(string serverInfo)
+        public void AddWatchList(ServerInfo serverInfo)
         {
-            lock (watchIPList)
+            lock (serverInfoList)
             {
-                if (!watchIPList.Contains(serverInfo)) watchIPList.Add(serverInfo);
-                else if (watchIPList.Contains(serverInfo)) watchIPList.Remove(serverInfo);
+                if (!serverInfoList.Contains(serverInfo)) serverInfoList.Add(serverInfo);
+                else if (serverInfoList.Contains(serverInfo)) serverInfoList.Remove(serverInfo);
             }
         }
 
         public void DisableAllWatch()
         {
-            watchIPList.Clear();
+            serverInfoList.Clear();
         }
 
         #endregion
@@ -119,7 +119,7 @@ namespace ARKServerQuery
 
         private int GetServerListCount()
         {
-            return watchIPList.Count;
+            return serverInfoList.Count;
         }
 
         /* 監控顯示步驟
@@ -129,7 +129,7 @@ namespace ARKServerQuery
          */
         private void ServerQuery()
         {
-            lock (watchIPList)
+            lock (serverInfoList)
                 Dispatcher.Invoke(() =>
                 {
                     try
@@ -137,14 +137,14 @@ namespace ARKServerQuery
                         int offset = GetServerListCount() - GetServerDisplayCount();
                         if (offset > 0)
                             for (int i = 0; i < offset; i++)
-                                mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(new ServerLabel(string.Empty, ClickDrag, ChangeSize, gFontSize)));
+                                mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Add(new ServerLabel(null, ClickDrag, ChangeSize, gFontSize)));
                         else if (offset < 0)
                             for (int i = 0; i < Math.Abs(offset); i++)
                                 mainPanel.Dispatcher.Invoke(() => mainPanel.Children.RemoveAt(GetServerListCount() - 1));
 
                         int cnt = 0;
                         foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
-                            child.UpdateInfo(watchIPList.ElementAt(cnt++));
+                            child.UpdateInfo(serverInfoList.ElementAt(cnt++));
                         SizeToContent = SizeToContent.WidthAndHeight;
                     } catch { }
                 });

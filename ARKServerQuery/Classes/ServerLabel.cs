@@ -26,9 +26,9 @@ namespace ARKServerQuery
      */
     public class ServerLabel : Label
     {
-        public ServerLabel(string watchString, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)
+        public ServerLabel(ServerInfo serverInfo, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)
         {
-            if (watchString != string.Empty) UpdateInfo(watchString);
+            if (serverInfo != null) UpdateInfo(serverInfo);
 
             HorizontalAlignment = HorizontalAlignment.Left;
             HorizontalContentAlignment = HorizontalAlignment.Left;
@@ -47,11 +47,10 @@ namespace ARKServerQuery
             MouseWheel += ChangeSize;
         }
 
-        public void UpdateInfo(string watchString)
+        public void UpdateInfo(ServerInfo serverInfo)
         {
-            string[] ipAndName = watchString.Split(',');
-            GameServer arkServer = GetServerInfo(ipAndName[0]);
-            string name = ipAndName[1];
+            GameServer arkServer = GetServerInfo(serverInfo);
+            string name = serverInfo.name;
 
             if (arkServer != null)
                 Content = name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer
@@ -100,23 +99,10 @@ namespace ARKServerQuery
 
         #endregion
 
-        private static string GetIP(string fullIP)
-        {
-            return Convert.ToString(fullIP.Split(':')[0]);
-        }
-
-        private static int GetPort(string fullIP)
-        {
-            return Convert.ToInt16(fullIP.Split(':')[1]);
-        }
-
-        private static GameServer GetServerInfo(string _fullIP)
+        private static GameServer GetServerInfo(ServerInfo serverInfo)
         {
             GameServer sv;
-            string ip = GetIP(_fullIP);
-            int port = GetPort(_fullIP);
-            ip = ip.Split(' ')[0];
-            try { sv = new GameServer(new IPEndPoint(IPAddress.Parse(ip), port)); }
+            try { sv = new GameServer(new IPEndPoint(IPAddress.Parse(serverInfo.ip), serverInfo.port)); }
             catch { return null; }
 
             return sv;

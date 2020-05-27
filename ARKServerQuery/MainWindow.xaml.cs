@@ -185,8 +185,8 @@ namespace ARKServerQuery
         // 對監控介面傳遞伺服器資訊
         private void ToggleSpecificServerWatchStatus(object sender, RoutedEventArgs e)
         {
-            object watchdogStr = ((Button)sender).CommandParameter;
-            watchdog.AddWatchList(Convert.ToString(watchdogStr));
+            object serverInfoObject = ((Button)sender).CommandParameter;
+            watchdog.AddWatchList((ServerInfo)serverInfoObject);
 
             UpdateWatchdogLanguage();
             UpdateWatchdogVisibilityStatus();

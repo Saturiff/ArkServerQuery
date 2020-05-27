@@ -16,7 +16,8 @@
             this.currentPlayer = currentPlayer;
             this.maxPlayer = maxPlayer;
             dgmaxPlayer = " / " + maxPlayer;
-            watchdogString = ip + ":" + port + ',' + name;
+            // watchdogString = ip + ":" + port + ',' + name;
+            watchdogString = this;
         }
         // 伺服器IP
         public string ip { get; set; }
@@ -25,7 +26,8 @@
         // 伺服器名稱
         public string name { get; set; }
         // 傳遞到監控介面的字串
-        public string watchdogString { get; set; }
+        // public string watchdogString { get; set; }
+        public ServerInfo watchdogString { get; set; }
         // 目前玩家數
         public int currentPlayer { get; set; }
         // 查詢介面所顯示的最大玩家數

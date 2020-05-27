@@ -9,21 +9,6 @@ namespace ServerListGen
 {
     class MainProgram
     {
-        public class ServerInfo
-        {
-            public ServerInfo() { }
-            public ServerInfo(string ip, string port, string name)
-            {
-                this.ip = ip;
-                this.port = port;
-                this.name = name;
-            }
-
-            public string ip { get; set; }
-            public string port { get; set; }
-            public string name { get; set; }
-        };
-
         static void Main(string[] args)
         {
             Console.WriteLine("該專案用於生成最新的官服列表，大約需要半分鐘的時間..案下Enter開始");
