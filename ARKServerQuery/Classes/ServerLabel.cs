@@ -1,4 +1,5 @@
-﻿using SourceQuery;
+﻿using ARKServerQuery.Properties;
+using SourceQuery;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -76,21 +77,21 @@ namespace ARKServerQuery
 
         #region 語言
 
-        public static void UpdateLanguage(LanguageList lang)
+        public static void UpdateLanguage()
         {
-            currentLanguage = lang;
+            currentLanguage = Settings.Default.customLanguage;
         }
 
-        protected static LanguageList currentLanguage = LanguageList.zh_tw;
+        private static LanguageList currentLanguage = LanguageList.zh_tw;
 
-        protected static readonly Dictionary<LanguageList, string> mutiLangText_PlayerText = new Dictionary<LanguageList, string>()
+        private static readonly Dictionary<LanguageList, string> mutiLangText_PlayerText = new Dictionary<LanguageList, string>()
         {
             { LanguageList.zh_tw, "人數" },
             { LanguageList.zh_cn, "人数" },
             { LanguageList.en_us, "Players" }
         };
 
-        protected static readonly Dictionary<LanguageList, string> mutiLangText_QueryFailed = new Dictionary<LanguageList, string>()
+        private static readonly Dictionary<LanguageList, string> mutiLangText_QueryFailed = new Dictionary<LanguageList, string>()
         {
             { LanguageList.zh_tw, "伺服器訪問失敗" },
             { LanguageList.zh_cn, "服务器访问失败" },
@@ -99,17 +100,17 @@ namespace ARKServerQuery
 
         #endregion
 
-        protected static string GetIP(string fullIP)
+        private static string GetIP(string fullIP)
         {
             return Convert.ToString(fullIP.Split(':')[0]);
         }
 
-        protected static int GetPort(string fullIP)
+        private static int GetPort(string fullIP)
         {
             return Convert.ToInt16(fullIP.Split(':')[1]);
         }
 
-        protected static GameServer GetServerInfo(string _fullIP)
+        private static GameServer GetServerInfo(string _fullIP)
         {
             GameServer sv;
             string ip = GetIP(_fullIP);
@@ -121,7 +122,7 @@ namespace ARKServerQuery
             return sv;
         }
 
-        protected static Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
+        private static Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
         {
             if (!isShadow)
             {
@@ -141,7 +142,7 @@ namespace ARKServerQuery
             }
         }
 
-        protected static ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
+        private static ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
         {
             if (sv.currentPlayer < 30)
                 return ServerPlayerStatus.Safe;
@@ -151,6 +152,6 @@ namespace ARKServerQuery
                 return ServerPlayerStatus.Danger;
         }
 
-        protected enum ServerPlayerStatus { Safe, Warning, Danger }
+        private enum ServerPlayerStatus { Safe, Warning, Danger }
     }
 }

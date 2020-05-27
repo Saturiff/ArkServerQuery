@@ -9,7 +9,7 @@ using System.Windows.Input;
 namespace ARKServerQuery
 {
     public enum LanguageList { zh_tw, zh_cn, en_us }
-
+    
     // 查詢介面
     public partial class MainWindow : Window
     {
@@ -27,7 +27,7 @@ namespace ARKServerQuery
 
         private void UpdateWatchdogLanguage()
         {
-            watchdog.SetLanguage(currentLanguage);
+            ServerLabel.UpdateLanguage();
         }
 
         private void UpdateMapListLanguage()

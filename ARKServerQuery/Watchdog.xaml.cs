@@ -80,11 +80,6 @@ namespace ARKServerQuery
             watchIPList.Clear();
         }
 
-        public void SetLanguage(LanguageList targetLanguage)
-        {
-            ServerLabel.UpdateLanguage(targetLanguage);
-        }
-
         #endregion
 
         #region 查詢主計時器
