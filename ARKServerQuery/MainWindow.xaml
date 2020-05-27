@@ -76,7 +76,7 @@
                     <DataGridTemplateColumn Header="" Width="auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Click="ToggleSpecificServerWatchStatus" Width="auto" CommandParameter="{Binding watchdogString}" Content="{DynamicResource Watch}"/>
+                                <Button Click="ToggleSpecificServerWatchStatus" Width="auto" CommandParameter="{Binding self}" Content="{DynamicResource Watch}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
