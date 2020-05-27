@@ -132,8 +132,9 @@ namespace ARKServerQuery
         // 加入伺服器
         private void JoinServer(object sender, RoutedEventArgs e)
         {
-            string watchIP = ((Button)sender).CommandParameter.ToString().Split(',')[0];
-            Process.Start("steam://connect/" + watchIP);
+            object serverInfoObject = ((Button)sender).CommandParameter;
+            Process.Start("steam://connect/" + 
+                ((ServerInfo)serverInfoObject).ip + Convert.ToString(((ServerInfo)serverInfoObject).port));
         }
 
         // 顯示地圖名稱
@@ -207,21 +208,9 @@ namespace ARKServerQuery
             Environment.Exit(Environment.ExitCode);
         }
 
-        private bool isDragging = false;
         private void ClickDrag(object sender, MouseButtonEventArgs e)
         {
-            isDragging = true;
-            watchdog.EnableQueryTimer(!isDragging);
             DragMove();
-        }
-
-        private void DragStatusDetect(object sender, MouseButtonEventArgs e)
-        {
-            if (isDragging)
-            {
-                isDragging = false;
-                watchdog.EnableQueryTimer(!isDragging);
-            }
         }
 
         private void ClickShowButton(object sender, MouseEventArgs e)

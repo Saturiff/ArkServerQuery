@@ -13,7 +13,7 @@
         Height="305.65" 
         ResizeMode="NoResize">
 
-    <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0" MouseLeftButtonUp="DragStatusDetect" >
+    <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0">
 
         <!-- 語言切換 -->
         <WrapPanel HorizontalAlignment="Left" Height="auto" Width="auto" Margin="13,7,0,0" VerticalAlignment="Top">
@@ -91,7 +91,7 @@
                     <DataGridTemplateColumn Width="40" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Click="JoinServer" CommandParameter="{Binding watchdogString}" Content="{DynamicResource Join}"/>
+                                <Button Click="JoinServer" CommandParameter="{Binding self}" Content="{DynamicResource Join}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

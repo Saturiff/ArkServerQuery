@@ -3,11 +3,13 @@ using SourceQuery;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using Timer = System.Windows.Forms.Timer;
 
 namespace ARKServerQuery
 {
@@ -26,9 +28,9 @@ namespace ARKServerQuery
      */
     public class ServerLabel : Label
     {
-        public ServerLabel(ServerInfo serverInfo, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)
+        public ServerLabel(int interval, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)
         {
-            if (serverInfo != null) UpdateInfo(serverInfo);
+            InitTimer(interval);
 
             HorizontalAlignment = HorizontalAlignment.Left;
             HorizontalContentAlignment = HorizontalAlignment.Left;
@@ -47,9 +49,25 @@ namespace ARKServerQuery
             MouseWheel += ChangeSize;
         }
 
-        public void UpdateInfo(ServerInfo serverInfo)
+        private Timer t;
+        private void InitTimer(int interval)
         {
-            GameServer arkServer = GetServerInfo(serverInfo);
+            t = new Timer();
+            t.Interval = interval;
+            t.Tick += new EventHandler(UpdateTick);
+            t.Start();
+        }
+
+        public ServerInfo serverInfo;
+        private void UpdateTick(object sender, EventArgs e)
+        {
+            if(serverInfo != null) UpdateContent();
+        }
+        
+        private GameServer arkServer;
+        public async void UpdateContent()
+        {
+            arkServer = await GetServerInfo(serverInfo);
             string name = serverInfo.name;
 
             if (arkServer != null)
@@ -72,6 +90,20 @@ namespace ARKServerQuery
                 ShadowDepth = 0,
                 Opacity = 1
             };
+        }
+
+        private Task<GameServer> GetServerInfo(ServerInfo serverInfo)
+        {
+            return Task.Factory.StartNew(() => TryGetGameServer(serverInfo));
+        }
+
+        private GameServer TryGetGameServer(ServerInfo serverInfo)
+        {
+            GameServer sv;
+            try { sv = new GameServer(new IPEndPoint(IPAddress.Parse(serverInfo.ip), serverInfo.port)); }
+            catch { return null; }
+
+            return sv;
         }
 
         #region 語言
@@ -98,15 +130,6 @@ namespace ARKServerQuery
         };
 
         #endregion
-
-        private static GameServer GetServerInfo(ServerInfo serverInfo)
-        {
-            GameServer sv;
-            try { sv = new GameServer(new IPEndPoint(IPAddress.Parse(serverInfo.ip), serverInfo.port)); }
-            catch { return null; }
-
-            return sv;
-        }
 
         private static Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
         {
