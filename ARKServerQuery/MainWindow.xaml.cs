@@ -27,16 +27,6 @@ namespace ARKServerQuery
 
         private void UpdateWatchdogLanguage() => ServerLabel.UpdateLanguage();
 
-        private void UpdateMapListLanguage()
-        {
-            if (currentLanguage == LanguageList.zh_tw)
-                Lable_Maps.Content = "地圖:\nTheIsland\t孤島\tAberration\t畸變\nTheCenter\t中心島\tExtinction\t滅絕\nScorchedEarth\t焦土";
-            else if (currentLanguage == LanguageList.zh_cn)
-                Lable_Maps.Content = "地图:\nTheIsland\t孤岛\tAberration\t畸变\nTheCenter\t中心岛\tExtinction\t灭绝\nScorchedEarth\t焦土";
-            else if (currentLanguage == LanguageList.en_us)
-                Lable_Maps.Content = "Maps:\nTheIsland\t\tAberration\t\nTheCenter\t\tExtinction\t\nScorchedEarth\t";
-        }
-
         private void LoadLanguageFile(string languagefileName) => Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary()
         {
             Source = new Uri(languagefileName, UriKind.RelativeOrAbsolute)
@@ -63,7 +53,6 @@ namespace ARKServerQuery
                 CB_LangList.SelectedIndex = 2;
                 currentLanguage = LanguageList.en_us;
             }
-            if (Lable_Maps != null) UpdateMapListLanguage();
 
             // 為了防止物件初始化時呼叫「更改事件」，讀取完設定後才掛鉤上事件
             CB_LangList.SelectionChanged += CB_LangList_SelectionChanged;
@@ -86,7 +75,6 @@ namespace ARKServerQuery
                 LoadLanguageFile("/Lang/en-us.xaml");
                 currentLanguage = LanguageList.en_us;
             }
-            if (Lable_Maps != null) UpdateMapListLanguage();
 
             Settings.Default.customLanguage = currentLanguage;
             Settings.Default.Save();
@@ -129,20 +117,6 @@ namespace ARKServerQuery
 
             Process.Start("steam://connect/" +
                 ((ServerInfo)serverInfoObject).ip + Convert.ToString(((ServerInfo)serverInfoObject).port));
-        }
-
-        // 顯示地圖名稱
-        private void ToggleMapTips()
-        {
-            if (WP_BottomButtonWarp.Visibility == Visibility.Hidden)
-                WP_BottomButtonWarp.Visibility = Visibility.Hidden;
-            else
-                WP_BottomButtonWarp.Visibility = Visibility.Visible;
-
-            if (Lable_Maps.Visibility == Visibility.Hidden)
-                Lable_Maps.Visibility = Visibility.Visible;
-            else
-                Lable_Maps.Visibility = Visibility.Hidden;
         }
 
         // 對搜尋狀態做按鈕的調整
@@ -210,8 +184,6 @@ namespace ARKServerQuery
             searchByAll.Abort();
             IsSearching(false);
         }
-
-        private void ClickMaps(object sender, RoutedEventArgs e) => ToggleMapTips();
 
         private void ClickDisableAllWatch(object sender, RoutedEventArgs e) => watchdog.DisableAllWatch();
 

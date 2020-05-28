@@ -12,4 +12,6 @@
     <sys:String x:Key="CancelWatch">Cancel Watch</sys:String>
     <sys:String x:Key="SearchAll">Search all</sys:String>
     <sys:String x:Key="SearchStop">Search stop</sys:String>
+    <sys:String x:Key="PlayerQuantifier">Players</sys:String>
+    <sys:String x:Key="QueryFailed">Server query failed</sys:String>
 </ResourceDictionary>

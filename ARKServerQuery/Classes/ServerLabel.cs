@@ -51,8 +51,7 @@ namespace ARKServerQuery
         private Timer t;
         private void InitTimer(int interval)
         {
-            t = new Timer();
-            t.Interval = interval;
+            t = new Timer { Interval = interval };
             t.Tick += new EventHandler(UpdateTick);
             t.Start();
         }
@@ -66,18 +65,13 @@ namespace ARKServerQuery
         private GameServer arkServer;
         public async void UpdateContent()
         {
-            arkServer = await GetServerInfo();
-            string name = serverInfo.name;
-
-            if (arkServer != null)
-                Content = name + "\n" + mutiLangText_PlayerText[currentLanguage] + ": " + arkServer.currentPlayer
-                    + " / " + arkServer.maxPlayer + "\n";
-            else
-                Content = name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
+            arkServer = await GetGameServer();
+            
+            Content = MakeLabelString(arkServer);
 
             Foreground = new SolidColorBrush((arkServer != null) ? GetStatusColor(GetServerPlayerWarningLevel(arkServer), false)
                                                                  : Palette[ColorName.Green]);
-
+            
             Effect = new DropShadowEffect
             {
                 BlurRadius = 20,
@@ -89,7 +83,20 @@ namespace ARKServerQuery
             };
         }
 
-        private Task<GameServer> GetServerInfo() => Task.Factory.StartNew(() => TryGetGameServer());
+        private string MakeLabelString(GameServer sv)
+        {
+            return "aaa";
+            if (sv != null)
+                return serverInfo.name + "\n" 
+                    + Application.Current.Resources[LocalizationKey.PlayerQuantifier.ToString()] + ": " 
+                    + sv.currentPlayer + " / " 
+                    + sv.maxPlayer + "\n";
+            else
+                return serverInfo.name + "\n" 
+                    + Application.Current.Resources[LocalizationKey.QueryFailed.ToString()] + " !\n";
+        }
+
+        private Task<GameServer> GetGameServer() => Task.Factory.StartNew(() => TryGetGameServer());
 
         private GameServer TryGetGameServer()
         {
@@ -105,20 +112,6 @@ namespace ARKServerQuery
         public static void UpdateLanguage() => currentLanguage = Settings.Default.customLanguage;
 
         private static LanguageList currentLanguage = LanguageList.zh_tw;
-
-        private static readonly Dictionary<LanguageList, string> mutiLangText_PlayerText = new Dictionary<LanguageList, string>()
-        {
-            { LanguageList.zh_tw, "人數" },
-            { LanguageList.zh_cn, "人数" },
-            { LanguageList.en_us, "Players" }
-        };
-
-        private static readonly Dictionary<LanguageList, string> mutiLangText_QueryFailed = new Dictionary<LanguageList, string>()
-        {
-            { LanguageList.zh_tw, "伺服器訪問失敗" },
-            { LanguageList.zh_cn, "服务器访问失败" },
-            { LanguageList.en_us, "Server query failed" }
-        };
 
         #endregion
 
@@ -153,7 +146,7 @@ namespace ARKServerQuery
         }
 
         private enum ServerPlayerWarningLevel { Safe = 0, Warning = 30, Danger = 60 }
-        private enum ColorName { Black, Green, Orange,  Red, Brown }
+        private enum ColorName { Black, Green, Orange, Red, Brown }
         
         private static readonly Dictionary<ColorName, Color> Palette = new Dictionary<ColorName, Color>()
         {
@@ -163,5 +156,12 @@ namespace ARKServerQuery
             { ColorName.Red, (Color)ColorConverter.ConvertFromString("#FFA80000") } ,
             { ColorName.Brown, (Color)ColorConverter.ConvertFromString("#FFA85C00") }
         };
+
+        private enum LocalizationKey { PlayerQuantifier, QueryFailed }
+        // private static readonly Dictionary<LocalizationKey, string> KeyString = new Dictionary<ColorName, string>()
+        // {
+        //     { LocalizationKey.PlayerQuantifier.ToString, PlayerQuantifier },
+        //     { LocalizationKey.QueryFailed, QueryFailed }
+        // };
     }
 }

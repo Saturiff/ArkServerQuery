@@ -12,4 +12,6 @@
     <sys:String x:Key="CancelWatch">取消監控</sys:String>
     <sys:String x:Key="SearchAll">全部查詢</sys:String>
     <sys:String x:Key="SearchStop">停止查詢</sys:String>
+    <sys:String x:Key="PlayerQuantifier">人數</sys:String>
+    <sys:String x:Key="QueryFailed">伺服器訪問失敗</sys:String>
 </ResourceDictionary>

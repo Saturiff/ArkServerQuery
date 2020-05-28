@@ -41,9 +41,6 @@
             <TextBox x:Name="TB_ServerID" TextWrapping="Wrap" Width="222" Background="Transparent" BorderBrush="White" Foreground="White" SelectionBrush="White" 
                          FontSize="20" TextChanged="TB_ServerID_TextChanged"/>
             
-            <Button x:Name="B_Maps" Content="?" Background="#02FFFFFF" Foreground="White" 
-                    MouseEnter="ClickShowButton" MouseLeave="ClickHideButton" Click="ClickMaps" Margin="20,0,0,0" Width="25" BorderBrush="White" Height="25"/>
-            
         </WrapPanel>
 
 
@@ -100,11 +97,7 @@
             </DataGrid>
         </WrapPanel>
 
-
-        <!-- 地圖提示 -->
-        <Label x:Name="Lable_Maps" HorizontalAlignment="Left" Margin="56,217,0,0" VerticalAlignment="Top" Foreground="White" Visibility="Hidden"/>
-
-
+        
         <!-- 監控操作、查詢操作 -->
         <WrapPanel x:Name="WP_BottomButtonWarp" HorizontalAlignment="Center" Margin="0,237,0,0" VerticalAlignment="Top">
 
