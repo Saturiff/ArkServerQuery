@@ -102,6 +102,7 @@
     <Compile Include="Classes\ArkServerCollection.cs" />
     <Compile Include="Classes\BindingProxy.cs" />
     <Compile Include="Classes\ServerInfo.cs" />
+    <Compile Include="Classes\WindowManipulate.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Classes\ServerLabel.cs" />
     <Compile Include="Classes\WindowsServices.cs" />

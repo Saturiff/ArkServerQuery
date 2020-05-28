@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ARKServerQuery.Classes;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,9 +17,12 @@ namespace ARKServerQuery
         public Watchdog()
         {
             InitializeComponent();
+            windowManipulateComponent = new WindowManipulate();
             CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering); // 用於鍵盤綁定
             Content = mainPanel;
         }
+
+        WindowManipulate windowManipulateComponent;
 
         // 裝伺服器資訊(ServerLabel型態)的主要容器
         private StackPanel mainPanel = new StackPanel();
@@ -27,26 +31,15 @@ namespace ARKServerQuery
 
         #region 鍵盤綁定
         // Hook全域鍵盤，在該視窗重新渲染時執行
-        private void CompositionTarget_Rendering(object sender, EventArgs e)
-        {
-            bool isKeyDown = ((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.Down) > 0) ||
-                ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.Down) > 0);
-
-            bool isManipulatable = (((Keyboard.GetKeyStates(Key.OemTilde) & KeyStates.None) == 0) ||
-                ((Keyboard.GetKeyStates(Key.OemQuotes) & KeyStates.None) == 0)) && canManipulateWindow;
-
-            if (isKeyDown) ToggleManipulateWindow(KeyStates.Down);
-            else if (isManipulatable) ToggleManipulateWindow(KeyStates.None);
-        }
+        private void CompositionTarget_Rendering(object sender, EventArgs e) 
+            => windowManipulateComponent.KeyDetect();
 
         // 初始化時將目前視窗參數儲存
-        private IntPtr hwnd;
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
 
-            hwnd = new WindowInteropHelper(this).Handle;
-            WindowsServices.SetOriStyle(hwnd);
+            windowManipulateComponent.Init(new WindowInteropHelper(this).Handle);
         }
 
         #endregion
@@ -85,11 +78,10 @@ namespace ARKServerQuery
 
         private int RandomTimerInterval => r.Next() % 200 + 1000;
 
-        /* 監控顯示步驟
-         * 1. 檢查已顯示與未顯示的物件數量差距
-         * 2. 更新數量
-         * 3. 更新已顯示的伺服器資訊
-         */
+        // 監控顯示步驟
+        // 1. 檢查已顯示與未顯示的物件數量差距
+        // 2. 更新數量
+        // 3. 更新已顯示的伺服器資訊
         private void UpdateServerQueryList()
         {
             lock (serverInfoList)
@@ -123,23 +115,6 @@ namespace ARKServerQuery
         #endregion
 
         #region 鍵盤/滑鼠與程式間的交互
-
-        private bool canManipulateWindow = false;
-
-        private KeyStates gKeyStates = KeyStates.None;
-
-        private void ToggleManipulateWindow(KeyStates inKeyStates)
-        {
-            /* None -> Down, Down -> None : 改變可操縱視窗狀態並保存目前狀態，視窗可移動時將停止伺服器訪問以增進使用者體驗
-             * None -> None, Down -> Down : 不做任何事
-             */
-            if (inKeyStates != gKeyStates) // 狀態改變則致能
-            {
-                canManipulateWindow = !canManipulateWindow;
-                WindowsServices.SetWindowExTransparent(hwnd);
-                gKeyStates = inKeyStates;
-            }
-        }
 
         private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
 
