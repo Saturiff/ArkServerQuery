@@ -74,7 +74,7 @@ namespace ARKServerQuery
 
         #region 監控標籤控制區
 
-        private double gFontSize = 20.0;
+        private double gFontSize = (double)FontSizeValue.Default;
 
         // 目前顯示的數量與目前清單的數量
         private int GetServerDisplayCount() => mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Count);
@@ -82,6 +82,8 @@ namespace ARKServerQuery
         private int GetServerListCount() => serverInfoList.Count;
 
         private Random r = new Random();
+
+        private int RandomTimerInterval => r.Next() % 200 + 1000;
 
         /* 監控顯示步驟
          * 1. 檢查已顯示與未顯示的物件數量差距
@@ -100,7 +102,7 @@ namespace ARKServerQuery
                         {
                             for (int i = 0; i < offset; i++)
                                 mainPanel.Dispatcher.Invoke(() => mainPanel.Children.
-                                    Add(new ServerLabel(r.Next() % 200 + 1000, ClickDrag, ChangeSize, gFontSize)));
+                                    Add(new ServerLabel(RandomTimerInterval, ClickDrag, ChangeSize, gFontSize)));
                         }
                         else if (offset < 0)
                         {
@@ -133,7 +135,7 @@ namespace ARKServerQuery
              */
             if (inKeyStates != gKeyStates) // 狀態改變則致能
             {
-                canManipulateWindow = canManipulateWindow ? false : true;
+                canManipulateWindow = !canManipulateWindow;
                 WindowsServices.SetWindowExTransparent(hwnd);
                 gKeyStates = inKeyStates;
             }
@@ -147,8 +149,8 @@ namespace ARKServerQuery
             {
                 foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
                 {
-                    if (child.FontSize <= 2) break;
-                    child.FontSize += 5;
+                    if (child.FontSize <= (int)FontSizeValue.Lowerbound) break;
+                    child.FontSize += (int)FontSizeValue.Add;
                     gFontSize = child.FontSize;
                 }
             }
@@ -156,12 +158,14 @@ namespace ARKServerQuery
             {
                 foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
                 {
-                    if (child.FontSize >= int.MaxValue) break;
-                    child.FontSize -= 5;
+                    if (child.FontSize >= (int)FontSizeValue.UpperBound) break;
+                    child.FontSize -= (int)FontSizeValue.Sub;
                     gFontSize = child.FontSize;
                 }
             }
         }
+
+        private enum FontSizeValue { Default = 20, Add = 5, Sub = 5, UpperBound = int.MaxValue , Lowerbound = 2 }
 
         #endregion
     }

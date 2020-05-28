@@ -38,7 +38,7 @@ namespace ARKServerQuery
             Margin = new Thickness(45, 0, 492, 0);
 
             Opacity = 1;
-            Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00000000"));
+            Background = new SolidColorBrush(Colors.Transparent);
             BorderBrush = new SolidColorBrush(Colors.Black);
 
             FontSize = gFontSize;
@@ -76,14 +76,14 @@ namespace ARKServerQuery
             else
                 Content = name + "\n" + mutiLangText_QueryFailed[currentLanguage] + " !\n";
 
-            Foreground = new SolidColorBrush((arkServer != null) ? GetStatusColor(GetServerPlayerStatus(arkServer), false)
-                                                                 : (Color)ColorConverter.ConvertFromString("#FF00A800")); // 綠
+            Foreground = new SolidColorBrush((arkServer != null) ? GetStatusColor(GetServerPlayerWarningLevel(arkServer), false)
+                                                                 : Palette[ColorName.Green]);
 
             Effect = new DropShadowEffect
             {
                 BlurRadius = 20,
-                Color = (arkServer != null) ? GetStatusColor(GetServerPlayerStatus(arkServer), true)
-                                            : (Color)ColorConverter.ConvertFromString("#FF000000"), // 黑,
+                Color = (arkServer != null) ? GetStatusColor(GetServerPlayerWarningLevel(arkServer), true)
+                                            : Palette[ColorName.Black],
                 Direction = 320,
                 ShadowDepth = 0,
                 Opacity = 1
@@ -123,36 +123,46 @@ namespace ARKServerQuery
 
         #endregion
 
-        private static Color GetStatusColor(ServerPlayerStatus status, bool isShadow)
+        private static Color GetStatusColor(ServerPlayerWarningLevel status, bool isShadow)
         {
             if (!isShadow)
             {
-                if (status == ServerPlayerStatus.Safe)
-                    return (Color)ColorConverter.ConvertFromString("#FF00A800"); // 綠
-                else if (status == ServerPlayerStatus.Warning)
-                    return (Color)ColorConverter.ConvertFromString("#FFBB4D00"); // 橘
+                if (status == ServerPlayerWarningLevel.Safe)
+                    return Palette[ColorName.Green];
+                else if (status == ServerPlayerWarningLevel.Warning)
+                    return Palette[ColorName.Orange];
                 else
-                    return (Color)ColorConverter.ConvertFromString("#FFA80000"); // 紅
+                    return Palette[ColorName.Red];
             }
             else
             {
-                if (status == ServerPlayerStatus.Safe || status == ServerPlayerStatus.Warning)
-                    return (Color)ColorConverter.ConvertFromString("#FF000000");
+                if (status == ServerPlayerWarningLevel.Safe || status == ServerPlayerWarningLevel.Warning)
+                    return Palette[ColorName.Black];
                 else
-                    return (Color)ColorConverter.ConvertFromString("#FFA85C00");
+                    return Palette[ColorName.Brown];
             }
         }
 
-        private static ServerPlayerStatus GetServerPlayerStatus(GameServer sv)
+        private static ServerPlayerWarningLevel GetServerPlayerWarningLevel(GameServer sv)
         {
-            if (sv.currentPlayer < 30)
-                return ServerPlayerStatus.Safe;
-            else if (sv.currentPlayer > 29 && sv.currentPlayer < 60)
-                return ServerPlayerStatus.Warning;
+            if (sv.currentPlayer < (int)ServerPlayerWarningLevel.Warning)
+                return ServerPlayerWarningLevel.Safe;
+            else if (sv.currentPlayer >= (int)ServerPlayerWarningLevel.Warning && sv.currentPlayer < (int)ServerPlayerWarningLevel.Danger)
+                return ServerPlayerWarningLevel.Warning;
             else
-                return ServerPlayerStatus.Danger;
+                return ServerPlayerWarningLevel.Danger;
         }
 
-        private enum ServerPlayerStatus { Safe, Warning, Danger }
+        private enum ServerPlayerWarningLevel { Safe = 0, Warning = 30, Danger = 60 }
+        private enum ColorName { Black, Green, Orange,  Red, Brown }
+        
+        private static readonly Dictionary<ColorName, Color> Palette = new Dictionary<ColorName, Color>()
+        {
+            { ColorName.Black, (Color)ColorConverter.ConvertFromString("#FF000000") } ,
+            { ColorName.Green, (Color)ColorConverter.ConvertFromString("#FF00A800") } ,
+            { ColorName.Orange, (Color)ColorConverter.ConvertFromString("#FFBB4D00") } ,
+            { ColorName.Red, (Color)ColorConverter.ConvertFromString("#FFA80000") } ,
+            { ColorName.Brown, (Color)ColorConverter.ConvertFromString("#FFA85C00") }
+        };
     }
 }

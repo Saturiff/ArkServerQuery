@@ -47,7 +47,6 @@ namespace ARKServerQuery
 
         private void InitializeLanguageString()
         {
-            // setting 預設值
             currentLanguage = Settings.Default.customLanguage;
             if (currentLanguage == LanguageList.zh_tw)
             {
@@ -103,14 +102,11 @@ namespace ARKServerQuery
         private void SearchByName()
         {
             string inString = TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text);
+
             if (inString.Length > 1)
-            {
                 ServerQuery.ListSearch(inString);
-            }
             else if (TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text == string.Empty))
-            {
                 ServerQuery.arkSvCollection.Clear();
-            }
 
             DG_ServerList.Dispatcher.Invoke(() => DG_ServerList.ItemsSource = ArkServerCollection.collection);
         }
@@ -119,8 +115,10 @@ namespace ARKServerQuery
         private void SearchByAll()
         {
             IsSearching(true);
+
             ServerQuery.ListSearch(string.Empty);
             DG_ServerList.Dispatcher.Invoke(() => DG_ServerList.ItemsSource = ArkServerCollection.collection);
+
             IsSearching(false);
         }
 
@@ -131,6 +129,7 @@ namespace ARKServerQuery
         private void JoinServer(object sender, RoutedEventArgs e)
         {
             object serverInfoObject = ((Button)sender).CommandParameter;
+
             Process.Start("steam://connect/" +
                 ((ServerInfo)serverInfoObject).ip + Convert.ToString(((ServerInfo)serverInfoObject).port));
         }
@@ -165,10 +164,7 @@ namespace ARKServerQuery
         #region 伺服器人數即時監控浮動文字(watchdog)
 
         Watchdog watchdog;
-        private void InitWatchdog()
-        {
-            watchdog = new Watchdog();
-        }
+        private void InitWatchdog() => watchdog = new Watchdog();
 
         private void UpdateWatchdogVisibilityStatus()
         {

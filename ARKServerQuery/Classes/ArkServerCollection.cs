@@ -37,6 +37,6 @@ namespace ARKServerQuery
 
         // 儲存伺服器的主Collection
         protected static ObservableCollection<ServerInfo> _collection = new ObservableCollection<ServerInfo>();
-        public static ObservableCollection<ServerInfo> collection { get { return _collection; } }
+        public static ObservableCollection<ServerInfo> collection { get => _collection; }
     }
 }
