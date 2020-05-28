@@ -18,11 +18,11 @@ namespace ARKServerQuery
         {
             InitializeComponent();
             windowManipulateComponent = new WindowManipulate();
-            CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering); // 用於鍵盤綁定
+            CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
             Content = mainPanel;
         }
 
-        WindowManipulate windowManipulateComponent;
+        private WindowManipulate windowManipulateComponent;
 
         // 裝伺服器資訊(ServerLabel型態)的主要容器
         private StackPanel mainPanel = new StackPanel();
@@ -49,16 +49,25 @@ namespace ARKServerQuery
         // 儲存查詢介面傳來的伺服器IP位址
         private List<ServerInfo> serverInfoList = new List<ServerInfo>();
 
-        public bool IsWatchListEmpty() => GetServerListCount() == 0;
+        public void UpdateVisibility()
+        {
+            if (serverInfoList.Count == 0)
+                Visibility = Visibility.Hidden;
+            else
+                Visibility = Visibility.Visible;
+        }
 
-        public void AddWatchList(ServerInfo serverInfo)
+        public void UpdateWatchList(ServerInfo serverInfo)
         {
             lock (serverInfoList)
             {
                 if (!serverInfoList.Contains(serverInfo)) serverInfoList.Add(serverInfo);
                 else if (serverInfoList.Contains(serverInfo)) serverInfoList.Remove(serverInfo);
             }
+
             UpdateServerQueryList();
+            UpdateVisibility();
+            Console.WriteLine(Visibility);
         }
 
         public void DisableAllWatch() => serverInfoList.Clear();
@@ -74,7 +83,7 @@ namespace ARKServerQuery
 
         private int GetServerListCount() => serverInfoList.Count;
 
-        private Random r = new Random();
+        private readonly Random r = new Random();
 
         private int RandomTimerInterval => r.Next() % 200 + 1000;
 

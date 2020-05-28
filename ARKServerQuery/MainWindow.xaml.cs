@@ -37,13 +37,10 @@ namespace ARKServerQuery
                 Lable_Maps.Content = "Maps:\nTheIsland\t\tAberration\t\nTheCenter\t\tExtinction\t\nScorchedEarth\t";
         }
 
-        private void LoadLanguageFile(string languagefileName)
+        private void LoadLanguageFile(string languagefileName) => Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary()
         {
-            Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary()
-            {
-                Source = new Uri(languagefileName, UriKind.RelativeOrAbsolute)
-            };
-        }
+            Source = new Uri(languagefileName, UriKind.RelativeOrAbsolute)
+        };
 
         private void InitializeLanguageString()
         {
@@ -135,7 +132,7 @@ namespace ARKServerQuery
         }
 
         // 顯示地圖名稱
-        private void ToggleMaps()
+        private void ToggleMapTips()
         {
             if (WP_BottomButtonWarp.Visibility == Visibility.Hidden)
                 WP_BottomButtonWarp.Visibility = Visibility.Hidden;
@@ -166,22 +163,13 @@ namespace ARKServerQuery
         Watchdog watchdog;
         private void InitWatchdog() => watchdog = new Watchdog();
 
-        private void UpdateWatchdogVisibilityStatus()
-        {
-            if (watchdog.IsWatchListEmpty())
-                watchdog.Visibility = Visibility.Hidden;
-            else
-                watchdog.Visibility = Visibility.Visible;
-        }
-
         // 對監控介面傳遞伺服器資訊
         private void ToggleSpecificServerWatchStatus(object sender, RoutedEventArgs e)
         {
             object serverInfoObject = ((Button)sender).CommandParameter;
-            watchdog.AddWatchList((ServerInfo)serverInfoObject);
+            watchdog.UpdateWatchList((ServerInfo)serverInfoObject);
 
             UpdateWatchdogLanguage();
-            UpdateWatchdogVisibilityStatus();
         }
 
         #endregion
@@ -223,11 +211,11 @@ namespace ARKServerQuery
             IsSearching(false);
         }
 
-        private void ClickMaps(object sender, RoutedEventArgs e) => ToggleMaps();
+        private void ClickMaps(object sender, RoutedEventArgs e) => ToggleMapTips();
 
         private void ClickDisableAllWatch(object sender, RoutedEventArgs e) => watchdog.DisableAllWatch();
 
-        private void ClickWatchVisibility(object sender, RoutedEventArgs e) => UpdateWatchdogVisibilityStatus();
+        private void ClickWatchVisibility(object sender, RoutedEventArgs e) => watchdog.UpdateVisibility();
 
         #endregion
     }
