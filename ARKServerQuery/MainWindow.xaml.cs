@@ -25,10 +25,7 @@ namespace ARKServerQuery
 
         private static LanguageList currentLanguage = LanguageList.zh_tw;
 
-        private void UpdateWatchdogLanguage()
-        {
-            ServerLabel.UpdateLanguage();
-        }
+        private void UpdateWatchdogLanguage() => ServerLabel.UpdateLanguage();
 
         private void UpdateMapListLanguage()
         {
@@ -161,10 +158,7 @@ namespace ARKServerQuery
         }
 
         // 顯示最小化按鈕
-        private void ShowButton(bool show)
-        {
-            Min_button.Opacity = show ? 1 : 0;
-        }
+        private void ShowButton(bool show) => Min_button.Opacity = show ? 1 : 0;
 
         #endregion
 
@@ -197,10 +191,7 @@ namespace ARKServerQuery
         #endregion
 
         #region 按鈕事件
-        private void ClickMin(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+        private void ClickMin(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
         private void ClickExit(object sender, RoutedEventArgs e)
         {
@@ -209,20 +200,11 @@ namespace ARKServerQuery
             Environment.Exit(Environment.ExitCode);
         }
 
-        private void ClickDrag(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
+        private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
 
-        private void ClickShowButton(object sender, MouseEventArgs e)
-        {
-            ShowButton(true);
-        }
+        private void ClickShowButton(object sender, MouseEventArgs e) => ShowButton(true);
 
-        private void ClickHideButton(object sender, MouseEventArgs e)
-        {
-            ShowButton(false);
-        }
+        private void ClickHideButton(object sender, MouseEventArgs e) => ShowButton(false);
 
         private Thread searchByName;
         private void TB_ServerID_TextChanged(object sender, TextChangedEventArgs e)
@@ -247,15 +229,9 @@ namespace ARKServerQuery
 
         private void ClickMaps(object sender, RoutedEventArgs e) => ToggleMaps();
 
-        private void ClickDisableAllWatch(object sender, RoutedEventArgs e)
-        {
-            watchdog.DisableAllWatch();
-        }
+        private void ClickDisableAllWatch(object sender, RoutedEventArgs e) => watchdog.DisableAllWatch();
 
-        private void ClickWatchVisibility(object sender, RoutedEventArgs e)
-        {
-            UpdateWatchdogVisibilityStatus();
-        }
+        private void ClickWatchVisibility(object sender, RoutedEventArgs e) => UpdateWatchdogVisibilityStatus();
 
         #endregion
     }

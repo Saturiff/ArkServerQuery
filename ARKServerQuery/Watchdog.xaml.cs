@@ -56,10 +56,7 @@ namespace ARKServerQuery
         // 儲存查詢介面傳來的伺服器IP位址
         private List<ServerInfo> serverInfoList = new List<ServerInfo>();
 
-        public bool IsWatchListEmpty()
-        {
-            return GetServerListCount() == 0;
-        }
+        public bool IsWatchListEmpty() => GetServerListCount() == 0;
 
         public void AddWatchList(ServerInfo serverInfo)
         {
@@ -71,10 +68,7 @@ namespace ARKServerQuery
             UpdateServerQueryList();
         }
 
-        public void DisableAllWatch()
-        {
-            serverInfoList.Clear();
-        }
+        public void DisableAllWatch() => serverInfoList.Clear();
 
         #endregion
 
@@ -83,15 +77,9 @@ namespace ARKServerQuery
         private double gFontSize = 20.0;
 
         // 目前顯示的數量與目前清單的數量
-        private int GetServerDisplayCount()
-        {
-            return mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Count);
-        }
+        private int GetServerDisplayCount() => mainPanel.Dispatcher.Invoke(() => mainPanel.Children.Count);
 
-        private int GetServerListCount()
-        {
-            return serverInfoList.Count;
-        }
+        private int GetServerListCount() => serverInfoList.Count;
 
         private Random r = new Random();
 

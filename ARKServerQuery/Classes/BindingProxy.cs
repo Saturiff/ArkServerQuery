@@ -7,10 +7,7 @@ namespace ARKServerQuery
     {
         #region Overrides of Freezable
 
-        protected override Freezable CreateInstanceCore()
-        {
-            return new BindingProxy();
-        }
+        protected override Freezable CreateInstanceCore() => new BindingProxy();
 
         #endregion
 

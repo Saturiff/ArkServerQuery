@@ -90,10 +90,7 @@ namespace ARKServerQuery
             };
         }
 
-        private Task<GameServer> GetServerInfo()
-        {
-            return Task.Factory.StartNew(() => TryGetGameServer());
-        }
+        private Task<GameServer> GetServerInfo() => Task.Factory.StartNew(() => TryGetGameServer());
 
         private GameServer TryGetGameServer()
         {
@@ -106,10 +103,7 @@ namespace ARKServerQuery
 
         #region 語言
 
-        public static void UpdateLanguage()
-        {
-            currentLanguage = Settings.Default.customLanguage;
-        }
+        public static void UpdateLanguage() => currentLanguage = Settings.Default.customLanguage;
 
         private static LanguageList currentLanguage = LanguageList.zh_tw;
 
