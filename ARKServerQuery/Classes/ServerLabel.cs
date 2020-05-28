@@ -27,7 +27,7 @@ namespace ARKServerQuery
     // 依照玩家人數改變字體顏色(0-29, 29-59, 60-)
     public class ServerLabel : Label
     {
-        public ServerLabel(int interval, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double gFontSize)
+        public ServerLabel(int interval, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double fontSize)
         {
             InitTimer(interval);
 
@@ -40,7 +40,7 @@ namespace ARKServerQuery
             Background = new SolidColorBrush(Colors.Transparent);
             BorderBrush = new SolidColorBrush(Colors.Black);
 
-            FontSize = gFontSize;
+            FontSize = fontSize;
             FontStretch = FontStretches.SemiCondensed;
             FontWeight = FontWeights.Bold;
 
@@ -106,14 +106,6 @@ namespace ARKServerQuery
             return sv;
         }
 
-        #region 語言
-
-        public static void UpdateLanguage() => currentLanguage = Settings.Default.customLanguage;
-
-        private static LanguageList currentLanguage = LanguageList.zh_tw;
-
-        #endregion
-
         private static Color GetStatusColor(ServerPlayerWarningLevel status, bool isShadow)
         {
             if (!isShadow)
@@ -157,10 +149,5 @@ namespace ARKServerQuery
         };
 
         private enum LocalizationKey { PlayerQuantifier, QueryFailed }
-        // private static readonly Dictionary<LocalizationKey, string> KeyString = new Dictionary<ColorName, string>()
-        // {
-        //     { LocalizationKey.PlayerQuantifier.ToString, PlayerQuantifier },
-        //     { LocalizationKey.QueryFailed, QueryFailed }
-        // };
     }
 }

@@ -31,7 +31,7 @@ namespace ARKServerQuery
 
         #region 鍵盤綁定
         // Hook全域鍵盤，在該視窗重新渲染時執行
-        private void CompositionTarget_Rendering(object sender, EventArgs e) 
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
             => windowManipulateComponent.KeyDetect();
 
         // 初始化時將目前視窗參數儲存
@@ -111,7 +111,7 @@ namespace ARKServerQuery
                                 mainPanel.Dispatcher.Invoke(() => mainPanel.Children.
                                     RemoveAt(GetServerListCount() - 1));
                         }
-                        
+
                         int cnt = 0;
                         foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
                             child.serverInfo = serverInfoList[cnt++];
@@ -149,7 +149,7 @@ namespace ARKServerQuery
             }
         }
 
-        private enum FontSizeValue { Default = 20, Add = 5, Sub = 5, UpperBound = int.MaxValue , Lowerbound = 2 }
+        private enum FontSizeValue { Default = 20, Add = 5, Sub = 5, UpperBound = int.MaxValue, Lowerbound = 2 }
 
         #endregion
     }

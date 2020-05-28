@@ -5,81 +5,35 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Localization = ARKServerQuery.Classes.Localization;
 
 namespace ARKServerQuery
 {
-    public enum LanguageList { zh_tw, zh_cn, en_us }
-
     // 查詢介面
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            InitializeLanguageString();
+            InitializeLocalization();
             ServerQuery.InitServerList();
             InitWatchdog();
         }
 
         #region 本地化
 
-        private static LanguageList currentLanguage = LanguageList.zh_tw;
-
-        private void UpdateWatchdogLanguage() => ServerLabel.UpdateLanguage();
-
-        private void LoadLanguageFile(string languagefileName) => Application.Current.Resources.MergedDictionaries[0] = new ResourceDictionary()
+        private void InitializeLocalization()
         {
-            Source = new Uri(languagefileName, UriKind.RelativeOrAbsolute)
-        };
-
-        private void InitializeLanguageString()
-        {
-            currentLanguage = Settings.Default.customLanguage;
-            if (currentLanguage == LanguageList.zh_tw)
-            {
-                LoadLanguageFile("/Lang/zh-tw.xaml");
-                CB_LangList.SelectedIndex = 0;
-                currentLanguage = LanguageList.zh_tw;
-            }
-            else if (currentLanguage == LanguageList.zh_cn)
-            {
-                LoadLanguageFile("/Lang/zh-cn.xaml");
-                CB_LangList.SelectedIndex = 1;
-                currentLanguage = LanguageList.zh_cn;
-            }
-            else if (currentLanguage == LanguageList.en_us)
-            {
-                LoadLanguageFile("/Lang/en-us.xaml");
-                CB_LangList.SelectedIndex = 2;
-                currentLanguage = LanguageList.en_us;
-            }
+            Localization.Load();
+            CB_LangList.SelectedIndex = (int)Settings.Default.customLanguage;
 
             // 為了防止物件初始化時呼叫「更改事件」，讀取完設定後才掛鉤上事件
             CB_LangList.SelectionChanged += CB_LangList_SelectionChanged;
         }
 
         private void CB_LangList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (CB_LangList.SelectedIndex == 0)
-            {
-                LoadLanguageFile("/Lang/zh-tw.xaml");
-                currentLanguage = LanguageList.zh_tw;
-            }
-            else if (CB_LangList.SelectedIndex == 1)
-            {
-                LoadLanguageFile("/Lang/zh-cn.xaml");
-                currentLanguage = LanguageList.zh_cn;
-            }
-            else if (CB_LangList.SelectedIndex == 2)
-            {
-                LoadLanguageFile("/Lang/en-us.xaml");
-                currentLanguage = LanguageList.en_us;
-            }
+            => Localization.Update(CB_LangList.SelectedIndex);
 
-            Settings.Default.customLanguage = currentLanguage;
-            Settings.Default.Save();
-            UpdateWatchdogLanguage();
-        }
         #endregion
 
         #region 查詢方法
@@ -142,8 +96,6 @@ namespace ARKServerQuery
         {
             object serverInfoObject = ((Button)sender).CommandParameter;
             watchdog.UpdateWatchList((ServerInfo)serverInfoObject);
-
-            UpdateWatchdogLanguage();
         }
 
         #endregion
