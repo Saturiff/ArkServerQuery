@@ -23,18 +23,18 @@ namespace SourceQuery
         private byte _maxPlayer;
         private string _gameTagData;
 
-        public string name          => _name.Split(' ')[0];
-        public int currentPlayer    => maxPlayer - Convert.ToInt16(_gameTagData.Split(',')[3].Split(':')[1]);
-        public int maxPlayer        => Convert.ToInt16(_maxPlayer);
+        public string name => _name.Split(' ')[0];
+        public int currentPlayer => maxPlayer - Convert.ToInt16(_gameTagData.Split(',')[3].Split(':')[1]);
+        public int maxPlayer => Convert.ToInt16(_maxPlayer);
         public bool connectStatus;
 
-        public GameServer() => connectStatus = true;
+        public GameServer() => connectStatus = false;
 
         public GameServer(IPEndPoint endpoint)
             : this()
         {
             _endPoint = endpoint;
-            
+
             using (_client = new UdpClient())
             {
                 _client.Client.SendTimeout = 500;
@@ -44,6 +44,8 @@ namespace SourceQuery
                 RefreshMainInfo();
             }
             _client = null;
+
+            if (_gameTagData?.Length > 0) connectStatus = true;
         }
 
         public void RefreshMainInfo()
@@ -119,7 +121,7 @@ namespace SourceQuery
                         packets[packetNumber] = data;
                     }
                 } while (packets.Any(p => p == null));
-            
+
 
                 var combinedData = Combine(packets);
                 if (usesBzip2)
@@ -134,7 +136,6 @@ namespace SourceQuery
             }
             catch
             {
-                connectStatus = false;
                 return null;
             }
         }

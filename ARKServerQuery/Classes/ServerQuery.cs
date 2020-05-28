@@ -18,7 +18,8 @@ namespace ARKServerQuery
             GameServer arkServer;
             try { arkServer = new GameServer(new IPEndPoint(IPAddress.Parse(ip), port)); }
             catch { return null; }
-            return arkServer.connectStatus ? arkServer : null;
+            if(arkServer != null && arkServer.connectStatus == false) return null;
+            return arkServer;
         }
 
         // 將回傳的GameServer寫入Collection

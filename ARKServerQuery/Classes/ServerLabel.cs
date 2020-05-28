@@ -85,7 +85,6 @@ namespace ARKServerQuery
 
         private string MakeLabelString(GameServer sv)
         {
-            return "aaa";
             if (sv != null)
                 return serverInfo.name + "\n" 
                     + Application.Current.Resources[LocalizationKey.PlayerQuantifier.ToString()] + ": " 
