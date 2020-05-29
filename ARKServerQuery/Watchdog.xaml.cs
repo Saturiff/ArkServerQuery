@@ -52,28 +52,18 @@ namespace ARKServerQuery
         // 儲存查詢介面傳來的伺服器IP位址
         private List<ServerInfo> serverInfoList = new List<ServerInfo>();
 
-        public void ToggleVisibility()
-        {
-            if (Visibility != Visibility.Visible)
-                Visibility = Visibility.Visible;
-            else
-                Visibility = Visibility.Hidden;
-        }
+        public void ToggleVisibility() => Visibility = (Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
 
-        public void UpdateVisibility()
-        {
-            if (serverInfoList.Count == 0)
-                Visibility = Visibility.Hidden;
-            else
-                Visibility = Visibility.Visible;
-        }
+        public void UpdateVisibility() => Visibility = (serverInfoList.Count == 0) ? Visibility.Hidden : Visibility.Visible;
 
         public void UpdateWatchList(ServerInfo serverInfo)
         {
             lock (serverInfoList)
             {
-                if (!serverInfoList.Contains(serverInfo)) serverInfoList.Add(serverInfo);
-                else if (serverInfoList.Contains(serverInfo)) serverInfoList.Remove(serverInfo);
+                if (!serverInfoList.Contains(serverInfo))
+                    serverInfoList.Add(serverInfo);
+                else
+                    serverInfoList.Remove(serverInfo);
             }
 
             UpdateServerQueryList();
@@ -84,6 +74,7 @@ namespace ARKServerQuery
         public void DisableAllWatch()
         {
             serverInfoList.Clear();
+
             UpdateServerQueryList();
         }
 
@@ -123,11 +114,8 @@ namespace ARKServerQuery
                         else if (offset < 0)
                         {
                             for (int i = 0; i < Math.Abs(offset); i++)
-                            {
                                 mainPanel.Dispatcher.Invoke(() => mainPanel.Children.
                                     RemoveAt(GetServerDisplayCount() - 1));
-                                Console.WriteLine("AAAAAAAAAAAAA");
-                            }
                         }
 
                         int cnt = 0;
