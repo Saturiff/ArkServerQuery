@@ -52,6 +52,14 @@ namespace ARKServerQuery
         // 儲存查詢介面傳來的伺服器IP位址
         private List<ServerInfo> serverInfoList = new List<ServerInfo>();
 
+        public void ToggleVisibility()
+        {
+            if (Visibility != Visibility.Visible)
+                Visibility = Visibility.Visible;
+            else
+                Visibility = Visibility.Hidden;
+        }
+
         public void UpdateVisibility()
         {
             if (serverInfoList.Count == 0)
@@ -73,7 +81,11 @@ namespace ARKServerQuery
             UpdateVisibility();
         }
 
-        public void DisableAllWatch() => serverInfoList.Clear();
+        public void DisableAllWatch()
+        {
+            serverInfoList.Clear();
+            UpdateServerQueryList();
+        }
 
         #endregion
 
@@ -111,8 +123,11 @@ namespace ARKServerQuery
                         else if (offset < 0)
                         {
                             for (int i = 0; i < Math.Abs(offset); i++)
+                            {
                                 mainPanel.Dispatcher.Invoke(() => mainPanel.Children.
-                                    RemoveAt(GetServerListCount() - 1));
+                                    RemoveAt(GetServerDisplayCount() - 1));
+                                Console.WriteLine("AAAAAAAAAAAAA");
+                            }
                         }
 
                         int cnt = 0;
