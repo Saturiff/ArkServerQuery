@@ -5,115 +5,271 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ARKServerQuery"
         mc:Ignorable="d"
-        WindowStyle="None"
-        Background="Transparent" 
         AllowsTransparency="True"
-        Title="" 
-        Width="707.999" 
-        Height="305.65" 
-        ResizeMode="NoResize">
+        Background="Transparent"
+        Height="305.65"
+        ResizeMode="NoResize"
+        Title=""
+        Width="707.999"
+        WindowStyle="None"
+        >
 
-    <Grid x:Name="G_search" MouseEnter="ClickShowButton"  MouseLeave="ClickHideButton" MouseLeftButtonDown="ClickDrag" Background="#FF63627A" Margin="0">
+    <Grid Background="#FF63627A"
+          Margin="0"
+          MouseLeftButtonDown="ClickDrag"
+          >
 
         <!-- 語言切換 -->
-        <WrapPanel HorizontalAlignment="Left" Height="auto" Width="auto" Margin="13,7,0,0" VerticalAlignment="Top">
+        <WrapPanel Height="auto"
+                   HorizontalAlignment="Left"
+                   Margin="13,7,0,0"
+                   VerticalAlignment="Top"
+                   Width="auto"
+                   >
 
-            <TextBlock Text="{DynamicResource SelectLanguage}" VerticalAlignment="Center" Foreground="White"/>
+            <TextBlock Text="{DynamicResource SelectLanguageLocalizedString}"
+                       VerticalAlignment="Center"
+                       Foreground="White"
+                       />
 
-            <ComboBox x:Name="CB_LangList" Width="92" SelectedIndex="0" VerticalAlignment="Center" Margin="10,0,0,0">
+            <ComboBox x:Name="CB_LanguageSwitcher"
+                      Margin="10,0,0,0"
+                      SelectedIndex="0"
+                      VerticalAlignment="Center"
+                      Width="92"
+                      >
                 
-                <ComboBoxItem Content="繁體中文"/>
+                <ComboBoxItem Content="繁體中文"
+                              />
                 
-                <ComboBoxItem Content="简体中文"/>
+                <ComboBoxItem Content="简体中文"
+                              />
                 
-                <ComboBoxItem Content="English"/>
+                <ComboBoxItem Content="English"
+                              />
                 
             </ComboBox>
 
         </WrapPanel>
 
-
         <!-- 伺服器查詢 -->
-        <WrapPanel Margin="0,0,0,200" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <WrapPanel HorizontalAlignment="Center"
+                   Margin="0,0,0,200" 
+                   VerticalAlignment="Center" 
+                   >
             
-            <Label Content="{DynamicResource InputServerName}" FontSize="18" Foreground="White"/>
+            <Label Content="{DynamicResource InputServerNameLocalizedString}" 
+                   FontSize="18" 
+                   Foreground="White"
+                   />
             
-            <TextBox x:Name="TB_ServerID" TextWrapping="Wrap" Width="222" Background="Transparent" BorderBrush="White" Foreground="White" SelectionBrush="White" 
-                         FontSize="20" TextChanged="TB_ServerID_TextChanged"/>
+            <TextBox x:Name="TB_ServerSearchBox"
+                     Background="Transparent"
+                     BorderBrush="White"
+                     FontSize="20"
+                     Foreground="White"
+                     SelectionBrush="White"
+                     TextChanged="TB_ServerSearchBox_TextChanged"
+                     TextWrapping="Wrap"
+                     Width="222"
+                     />
             
         </WrapPanel>
-
 
         <!-- 視窗操作 -->
-        <WrapPanel Margin="0" VerticalAlignment="Top" HorizontalAlignment="Right">
+        <WrapPanel HorizontalAlignment="Right"
+                   Margin="0"
+                   VerticalAlignment="Top"
+                   >
             
-            <Button x:Name="Min_button"     Content="—" Height="20" Width="20" Background="#02FFFFFF" Foreground="#FF9B9B9B" 
-                    MouseEnter="ClickShowButton" MouseLeave="ClickHideButton" Click="ClickMin"/>
+            <Button x:Name="B_Minimize"
+                    Background="#02FFFFFF"
+                    Click="B_Minimize_Click"
+                    Content="—"
+                    Foreground="#FF9B9B9B"
+                    Height="20"
+                    Width="20"
+                    />
             
-            <Button x:Name="Close_button"   Content="X" Height="20" Width="20" Background="#02FFFFFF" Foreground="#FF9B9B9B" 
-                    MouseEnter="ClickShowButton" MouseLeave="ClickHideButton" Click="ClickExit" />
+            <Button x:Name="B_Close"
+                    Background="#02FFFFFF"
+                    Click="B_Close_Click"
+                    Content="X"
+                    Foreground="#FF9B9B9B"
+                    Height="20"
+                    Width="20"
+                    />
             
         </WrapPanel>
 
-
         <!-- 伺服器列表 -->
-        <WrapPanel HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Orientation="Vertical">
+        <WrapPanel HorizontalAlignment="Center"
+                   Margin="0"
+                   Orientation="Vertical"
+                   VerticalAlignment="Center"
+                   >
             
-            <DataGrid x:Name="DG_ServerList" Height="126" Width="auto" FontSize="16" Background="#00545374" Foreground="Black" 
-                      HorizontalGridLinesBrush="White" VerticalGridLinesBrush="White" HorizontalAlignment="Center" VerticalAlignment="Center" AutoGenerateColumns="False" 
-                      CanUserAddRows="false" FontWeight="Bold" BorderBrush="#00000000">
+            <DataGrid x:Name="DG_ServerSearchResultArea"
+                      AutoGenerateColumns="False" 
+                      Background="#00545374"
+                      BorderBrush="#00000000"
+                      CanUserAddRows="false"
+                      FontSize="16"
+                      FontWeight="Bold"
+                      Foreground="Black" 
+                      Height="126"
+                      HorizontalAlignment="Center"
+                      HorizontalGridLinesBrush="White"
+                      VerticalAlignment="Center"
+                      VerticalGridLinesBrush="White"
+                      Width="auto"
+                      >
 
                 <DataGrid.Resources>
-                    <local:BindingProxy x:Key="DG_proxy_name" Data="{DynamicResource ServerName}"/>
-                    <local:BindingProxy x:Key="DG_proxy_players" Data="{DynamicResource Players}"/>
+                    
+                    <local:BindingProxy x:Key="DG_ProxyName"
+                                        Data="{DynamicResource ServerNameLocalizedString}"
+                                        />
+                    
+                    <local:BindingProxy x:Key="DG_ProxyPlayers"
+                                        Data="{DynamicResource PlayersLocalizedString}"
+                                        />
+                    
                 </DataGrid.Resources>
 
                 <!-- 監控、名稱、目前人數、最大人數、加入 -->
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="" Width="auto">
+                    
+                    <DataGridTemplateColumn Header=""
+                                            Width="auto"
+                                            >
+                        
                         <DataGridTemplateColumn.CellTemplate>
+                            
                             <DataTemplate>
-                                <Button Click="ToggleSpecificServerWatchStatus" Width="auto" CommandParameter="{Binding self}" Content="{DynamicResource Watch}"/>
+                                
+                                <Button Click="B_UpdateServerMonitoringStatus_Click"
+                                        CommandParameter="{Binding self}"
+                                        Content="{DynamicResource WatchLocalizedString}"
+                                        Width="auto"
+                                        />
+                                
                             </DataTemplate>
+                            
                         </DataGridTemplateColumn.CellTemplate>
+                        
                     </DataGridTemplateColumn>
 
+                    <DataGridTextColumn Binding="{Binding name}"
+                                        Header="{Binding Data, Source={StaticResource DG_ProxyName}}"
+                                        IsReadOnly="True"
+                                        Width="370"
+                                        />
 
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_name}}"    Binding="{Binding name}"          Width="370"  IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding currentPlayer}"
+                                        Header="{Binding Data, Source={StaticResource DG_ProxyPlayers}}"
+                                        IsReadOnly="True"
+                                        Width="auto"
+                                        />
 
-                    <DataGridTextColumn Header="{Binding Data, Source={StaticResource DG_proxy_players}}" Binding="{Binding currentPlayer}" Width="auto" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding dgmaxPlayer}"
+                                        Header=""
+                                        IsReadOnly="True"
+                                        Width="60"
+                                        />
 
-                    <DataGridTextColumn Header=""                                                         Binding="{Binding dgmaxPlayer}"   Width="60"   IsReadOnly="True"/>
-
-                    <DataGridTemplateColumn Width="40" IsReadOnly="True">
+                    <DataGridTemplateColumn Width="40"
+                                            IsReadOnly="True"
+                                            >
+                        
                         <DataGridTemplateColumn.CellTemplate>
+                            
                             <DataTemplate>
-                                <Button Click="JoinServer" CommandParameter="{Binding self}" Content="{DynamicResource Join}"/>
+                                
+                                <Button Click="JoinServer"
+                                        CommandParameter="{Binding self}"
+                                        Content="{DynamicResource JoinLocalizedString}"
+                                        />
+                                
                             </DataTemplate>
+                            
                         </DataGridTemplateColumn.CellTemplate>
+                        
                     </DataGridTemplateColumn>
+                    
                 </DataGrid.Columns>
 
             </DataGrid>
+            
         </WrapPanel>
 
         
         <!-- 監控操作、查詢操作 -->
-        <WrapPanel x:Name="WP_BottomButtonWarp" HorizontalAlignment="Center" Margin="0,237,0,0" VerticalAlignment="Top">
+        <WrapPanel x:Name="WP_BottomButtonWarp"
+                   HorizontalAlignment="Center"
+                   Margin="0,237,0,0"
+                   VerticalAlignment="Top"
+                   >
 
-            <Button x:Name="B_WatchVisibility"  Content="{DynamicResource HideWatch}"   HorizontalAlignment="Center" Click="ClickWatchVisibility"   Background="#00DDDDDD" 
-                        BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Width="auto" Margin="0"/>
+            <Button x:Name="B_WatchVisibility"
+                    Background="#00DDDDDD" 
+                    BorderBrush="White"
+                    Click="ClickWatchVisibility"
+                    Content="{DynamicResource HideWatchLocalizedString}"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Height="44"
+                    HorizontalAlignment="Center"
+                    Margin="0"
+                    Width="auto"
+                    />
 
-            <Button x:Name="B_DisableAllWatch"  Content="{DynamicResource CancelWatch}" HorizontalAlignment="Center" Click="ClickDisableAllWatch"   Background="#00DDDDDD" 
-                        BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Width="auto" Margin="50,0,0,0"/>
+            <Button x:Name="B_DisableAllWatch"
+                    Background="#00DDDDDD" 
+                    BorderBrush="White"
+                    Click="ClickDisableAllWatch"
+                    Content="{DynamicResource CancelWatchLocalizedString}"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Height="44"
+                    HorizontalAlignment="Center"
+                    Margin="50,0,0,0"
+                    Width="auto"
+                    />
 
-            <Button x:Name="B_Start_Load"       Content="{DynamicResource SearchAll}"   HorizontalAlignment="Center" Click="ClickStartSearchAll"    Background="#00DDDDDD" 
-                        BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Width="auto" Margin="50,0,0,0"/>
+            <Button x:Name="B_Start_Load"
+                    Background="#00DDDDDD" 
+                    BorderBrush="White"
+                    Click="ClickStartSearchAll"
+                    Content="{DynamicResource SearchAllLocalizedString}"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Height="44"
+                    HorizontalAlignment="Center"
+                    Margin="50,0,0,0"
+                    Width="auto"
+                    />
 
-            <Button x:Name="B_Stop_Load"        Content="{DynamicResource SearchStop}"  HorizontalAlignment="Center" Click="ClickStopSearchAll"     Background="#00DDDDDD" 
-                        BorderBrush="White" Foreground="White" FontWeight="Bold" FontSize="20" Height="44" Width="auto" Margin="50,0,0,0" IsEnabled="False"/>
+            <Button x:Name="B_Stop_Load"
+                    Background="#00DDDDDD" 
+                    BorderBrush="White"
+                    Click="ClickStopSearchAll"
+                    Content="{DynamicResource SearchStopLocalizedString}"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Height="44"
+                    HorizontalAlignment="Center"
+                    IsEnabled="False"
+                    Margin="50,0,0,0"
+                    Width="auto"
+                    />
 
         </WrapPanel>
         
     </Grid>
+    
 </Window>

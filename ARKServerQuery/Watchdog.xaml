@@ -5,8 +5,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        WindowStyle="None" 
         AllowsTransparency="True"
+        Background="#00000000"
+        Height="auto"
+        HorizontalAlignment="Left"
         ResizeMode="NoResize"
-        Title="" Topmost="True" Height="auto" Width="auto" Background="#00000000" HorizontalAlignment="Left" VerticalAlignment="Top" ShowInTaskbar="False">
-</Window>
+        ShowInTaskbar="False"
+        Title=""
+        Topmost="True"
+        VerticalAlignment="Top"
+        Width="auto"
+        WindowStyle="None" 
+        />

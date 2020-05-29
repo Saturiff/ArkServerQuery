@@ -8,10 +8,7 @@ namespace ARKServerQuery.Classes
 {
     public static class Localization
     {
-        public static void Load()
-        {
-            LoadLanguageFile(Settings.Default.customLanguage);
-        }
+        public static void Load() => LoadLanguageFile(Settings.Default.customLanguage);
 
         public static void Update(int index)
         {
@@ -37,6 +34,6 @@ namespace ARKServerQuery.Classes
             => Enum.GetValues(typeof(LanguageList)).Cast<LanguageList>().Select((x, i)
             => new { item = x, index = i }).Single(x => x.index == index).item;
 
-        private enum LanguageList { zh_tw = 0, zh_cn = 1, en_us = 2 }
+        public enum LanguageList { zh_tw = 0, zh_cn = 1, en_us = 2 }
     }
 }

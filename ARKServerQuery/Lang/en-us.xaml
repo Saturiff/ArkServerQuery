@@ -2,16 +2,17 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <sys:String x:Key="SelectLanguage">Language :</sys:String>
-    <sys:String x:Key="InputServerName">Enter server name : </sys:String>
-    <sys:String x:Key="Watch">Watch</sys:String>
-    <sys:String x:Key="ServerName">Server name</sys:String>
-    <sys:String x:Key="Players">Players</sys:String>
-    <sys:String x:Key="Join">Join</sys:String>
-    <sys:String x:Key="HideWatch">Hide Watch</sys:String>
-    <sys:String x:Key="CancelWatch">Cancel Watch</sys:String>
-    <sys:String x:Key="SearchAll">Search all</sys:String>
-    <sys:String x:Key="SearchStop">Search stop</sys:String>
-    <sys:String x:Key="PlayerQuantifier">Players</sys:String>
-    <sys:String x:Key="QueryFailed">Server query failed</sys:String>
+    <sys:String x:Key="SelectLanguageLocalizedString">Language :</sys:String>
+    <sys:String x:Key="InputServerNameLocalizedString">Enter server name : </sys:String>
+    <sys:String x:Key="WatchLocalizedString">Watch</sys:String>
+    <sys:String x:Key="ServerNameLocalizedString">Server name</sys:String>
+    <sys:String x:Key="PlayersLocalizedString">Players</sys:String>
+    <sys:String x:Key="JoinLocalizedString">Join</sys:String>
+    <sys:String x:Key="HideWatchLocalizedString">Hide Watch</sys:String>
+    <sys:String x:Key="CancelWatchLocalizedString">Cancel Watch</sys:String>
+    <sys:String x:Key="SearchAllLocalizedString">Search all</sys:String>
+    <sys:String x:Key="SearchStopLocalizedString">Search stop</sys:String>
+    <sys:String x:Key="PlayerQuantifierLocalizedString">Players</sys:String>
+    <sys:String x:Key="QueryFailedLocalizedString">Server query failed</sys:String>
 </ResourceDictionary>
+    

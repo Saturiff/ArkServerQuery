@@ -16,9 +16,12 @@ namespace ARKServerQuery
         private static GameServer GetServerInfo(string ip, int port)
         {
             GameServer arkServer;
+
             try { arkServer = new GameServer(new IPEndPoint(IPAddress.Parse(ip), port)); }
             catch { return null; }
-            if(arkServer != null && arkServer.connectStatus == false) return null;
+
+            if (arkServer != null && arkServer.connectStatus == false) return null;
+
             return arkServer;
         }
 
@@ -29,39 +32,56 @@ namespace ARKServerQuery
         public static void ListSearch(string inString)
         {
             if (searchThreadList.Count != 0) searchThreadList.ForEach(c => c.Abort());
+
             searchThreadList.Clear();
             arkSvCollection.Clear();
+
             Thread searchThread;
             bool isEmptyString = inString == string.Empty;
+
             serverInfoList.ForEach(sv =>
             {
                 if (isEmptyString || sv.name.ToLower().Contains(inString.ToLower()))
                 {
                     searchThread = new Thread(() => SearchServerInfo(sv));
+
                     searchThreadList.Add(searchThread);
+
                     searchThread.Start();
                 }
             });
         }
 
         // 從生成出的文件初始化伺服器列表並儲存
-        public static void InitServerList()
+        public static void InitializeServerList()
         {
-            int serverOnIdx = 0;
+            int serverIndex = 0;
+
             StreamReader sr = new StreamReader("./bin/ServerList.txt");
+
             string[] allServer = sr.ReadToEnd().Split(',');
+
             foreach (var svIP in allServer)
             {
-                if (IsIP(svIP)) serverInfoList.Add(new ServerInfo(svIP, Convert.ToInt16(allServer[serverOnIdx + 1]), allServer[serverOnIdx + 2]));
-                serverOnIdx += 1;
+                if (IsIP(svIP))
+                    serverInfoList.Add(new ServerInfo(svIP, Convert.ToInt16(allServer[serverIndex + 1]), allServer[serverIndex + 2]));
+
+                serverIndex += 1;
             }
         }
 
         // 所有搜尋中的執行緒
         private static List<Thread> searchThreadList = new List<Thread>();
-        // 所有搜尋到的伺服器資訊
+
+        // 所有搜尋到的伺服器資訊清單
         private static List<ServerInfo> serverInfoList = new List<ServerInfo>();
-        // 伺服器Collection
-        public static ArkServerCollection arkSvCollection = new ArkServerCollection();
+
+        // 所有搜尋到的伺服器GameServer實體集合
+        public static ArkServerCollection arkSvCollection
+        {
+            get => _arkSvCollection;
+            set => _arkSvCollection = value;
+        }
+        private static ArkServerCollection _arkSvCollection = new ArkServerCollection();
     }
 }

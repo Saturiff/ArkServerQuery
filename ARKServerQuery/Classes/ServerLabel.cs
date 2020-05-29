@@ -1,5 +1,4 @@
-﻿using ARKServerQuery.Properties;
-using SourceQuery;
+﻿using SourceQuery;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -13,9 +12,9 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace ARKServerQuery
 {
-    // ServerLabel 繼承自 Label ，實例化時即可保存伺服器資訊
+    // ServerLabel 繼承自 Label ，實例化時即可用來保存伺服器資訊
     // 建構子必要參數:
-    // watchString -> 由查詢介面接收而來的伺服器字串，預設格式為 " IP:PORT,伺服器名稱 "
+    // WatchLocalizedStringString -> 由查詢介面接收而來的伺服器字串，預設格式為 " IP:PORT,伺服器名稱 "
     // ClickDrag   -> 拖曳視窗事件
     // ChangeSize  -> 改變文字大小事件
     // gFontSize   -> 欲顯示的文字大小
@@ -24,7 +23,7 @@ namespace ARKServerQuery
     // 實例化 GameServer 嘗試訪問目標伺服器
     // 設定顯示內容與格式
     // 若 GameServer 為 null ，則顯示訪問失敗字串; 若不為 null 則顯示實時玩家人數
-    // 依照玩家人數改變字體顏色(0-29, 29-59, 60-)
+    // 依照玩家人數改變字體顏色(0-29, 30-59, 60-maxPlayer)
     public class ServerLabel : Label
     {
         public ServerLabel(int interval, MouseButtonEventHandler ClickDrag, MouseWheelEventHandler ChangeSize, double fontSize)
@@ -66,12 +65,12 @@ namespace ARKServerQuery
         public async void UpdateContent()
         {
             arkServer = await GetGameServer();
-            
+
             Content = MakeLabelString(arkServer);
 
             Foreground = new SolidColorBrush((arkServer != null) ? GetStatusColor(GetServerPlayerWarningLevel(arkServer), false)
                                                                  : Palette[ColorName.Green]);
-            
+
             Effect = new DropShadowEffect
             {
                 BlurRadius = 20,
@@ -86,13 +85,13 @@ namespace ARKServerQuery
         private string MakeLabelString(GameServer sv)
         {
             if (sv != null)
-                return serverInfo.name + "\n" 
-                    + Application.Current.Resources[LocalizationKey.PlayerQuantifier.ToString()] + ": " 
-                    + sv.currentPlayer + " / " 
+                return serverInfo.name + "\n"
+                    + Application.Current.Resources[LocalizationKey.PlayerQuantifierLocalizedString.ToString()] + ": "
+                    + sv.currentPlayer + " / "
                     + sv.maxPlayer + "\n";
             else
-                return serverInfo.name + "\n" 
-                    + Application.Current.Resources[LocalizationKey.QueryFailed.ToString()] + " !\n";
+                return serverInfo.name + "\n"
+                    + Application.Current.Resources[LocalizationKey.QueryFailedLocalizedString.ToString()] + " !\n";
         }
 
         private Task<GameServer> GetGameServer() => Task.Factory.StartNew(() => TryGetGameServer());
@@ -138,7 +137,7 @@ namespace ARKServerQuery
 
         private enum ServerPlayerWarningLevel { Safe = 0, Warning = 30, Danger = 60 }
         private enum ColorName { Black, Green, Orange, Red, Brown }
-        
+
         private static readonly Dictionary<ColorName, Color> Palette = new Dictionary<ColorName, Color>()
         {
             { ColorName.Black, (Color)ColorConverter.ConvertFromString("#FF000000") } ,
@@ -148,6 +147,6 @@ namespace ARKServerQuery
             { ColorName.Brown, (Color)ColorConverter.ConvertFromString("#FFA85C00") }
         };
 
-        private enum LocalizationKey { PlayerQuantifier, QueryFailed }
+        private enum LocalizationKey { PlayerQuantifierLocalizedString, QueryFailedLocalizedString }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SourceQuery;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
-using SourceQuery;
 
 namespace ARKServerQuery
 {
@@ -36,7 +36,8 @@ namespace ARKServerQuery
         }
 
         // 儲存伺服器的主Collection
-        protected static ObservableCollection<ServerInfo> _collection = new ObservableCollection<ServerInfo>();
+        private static ObservableCollection<ServerInfo> _collection = new ObservableCollection<ServerInfo>();
+
         public static ObservableCollection<ServerInfo> collection { get => _collection; }
     }
 }

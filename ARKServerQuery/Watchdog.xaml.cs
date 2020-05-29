@@ -17,8 +17,11 @@ namespace ARKServerQuery
         public Watchdog()
         {
             InitializeComponent();
+
             windowManipulateComponent = new WindowManipulate();
+
             CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
+
             Content = mainPanel;
         }
 
@@ -66,8 +69,8 @@ namespace ARKServerQuery
             }
 
             UpdateServerQueryList();
+
             UpdateVisibility();
-            Console.WriteLine(Visibility);
         }
 
         public void DisableAllWatch() => serverInfoList.Clear();
@@ -115,6 +118,7 @@ namespace ARKServerQuery
                         int cnt = 0;
                         foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
                             child.serverInfo = serverInfoList[cnt++];
+
                         SizeToContent = SizeToContent.WidthAndHeight;
                     }
                     catch { }
@@ -134,7 +138,9 @@ namespace ARKServerQuery
                 foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
                 {
                     if (child.FontSize <= (int)FontSizeValue.Lowerbound) break;
+
                     child.FontSize += (int)FontSizeValue.Add;
+
                     gFontSize = child.FontSize;
                 }
             }
@@ -143,7 +149,9 @@ namespace ARKServerQuery
                 foreach (ServerLabel child in mainPanel.Dispatcher.Invoke(() => mainPanel.Children))
                 {
                     if (child.FontSize >= (int)FontSizeValue.UpperBound) break;
+
                     child.FontSize -= (int)FontSizeValue.Sub;
+
                     gFontSize = child.FontSize;
                 }
             }

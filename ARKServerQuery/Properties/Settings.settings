@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ARKServerQuery.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="customLanguage" Type="ARKServerQuery.LanguageList" Scope="User">
+    <Setting Name="customLanguage" Type="ARKServerQuery.Classes.Localization.LanguageList" Scope="User">
       <Value Profile="(Default)">zh_tw</Value>
     </Setting>
   </Settings>

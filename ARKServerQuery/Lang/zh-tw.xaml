@@ -2,16 +2,17 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <sys:String x:Key="SelectLanguage">選擇語言 :</sys:String>
-    <sys:String x:Key="InputServerName">輸入伺服器名稱 : </sys:String>
-    <sys:String x:Key="Watch">監控</sys:String>
-    <sys:String x:Key="ServerName">名稱</sys:String>
-    <sys:String x:Key="Players">人數</sys:String>
-    <sys:String x:Key="Join">加入</sys:String>
-    <sys:String x:Key="HideWatch">隱藏監控</sys:String>
-    <sys:String x:Key="CancelWatch">取消監控</sys:String>
-    <sys:String x:Key="SearchAll">全部查詢</sys:String>
-    <sys:String x:Key="SearchStop">停止查詢</sys:String>
-    <sys:String x:Key="PlayerQuantifier">人數</sys:String>
-    <sys:String x:Key="QueryFailed">伺服器訪問失敗</sys:String>
+    <sys:String x:Key="SelectLanguageLocalizedString">選擇語言 :</sys:String>
+    <sys:String x:Key="InputServerNameLocalizedString">輸入伺服器名稱 : </sys:String>
+    <sys:String x:Key="WatchLocalizedString">監控</sys:String>
+    <sys:String x:Key="ServerNameLocalizedString">名稱</sys:String>
+    <sys:String x:Key="PlayersLocalizedString">人數</sys:String>
+    <sys:String x:Key="JoinLocalizedString">加入</sys:String>
+    <sys:String x:Key="HideWatchLocalizedString">隱藏監控</sys:String>
+    <sys:String x:Key="CancelWatchLocalizedString">取消監控</sys:String>
+    <sys:String x:Key="SearchAllLocalizedString">全部查詢</sys:String>
+    <sys:String x:Key="SearchStopLocalizedString">停止查詢</sys:String>
+    <sys:String x:Key="PlayerQuantifierLocalizedString">人數</sys:String>
+    <sys:String x:Key="QueryFailedLocalizedString">伺服器訪問失敗</sys:String>
 </ResourceDictionary>
+    

@@ -15,9 +15,12 @@ namespace ARKServerQuery
         public MainWindow()
         {
             InitializeComponent();
+
             InitializeLocalization();
-            ServerQuery.InitServerList();
-            InitWatchdog();
+
+            ServerQuery.InitializeServerList();
+
+            InitializeWatchdog();
         }
 
         #region 本地化
@@ -25,101 +28,99 @@ namespace ARKServerQuery
         private void InitializeLocalization()
         {
             Localization.Load();
-            CB_LangList.SelectedIndex = (int)Settings.Default.customLanguage;
+            CB_LanguageSwitcher.SelectedIndex = (int)Settings.Default.customLanguage;
 
             // 為了防止物件初始化時呼叫「更改事件」，讀取完設定後才掛鉤上事件
-            CB_LangList.SelectionChanged += CB_LangList_SelectionChanged;
+            CB_LanguageSwitcher.SelectionChanged += CB_LanguageSwitcher_SelectionChanged;
         }
 
-        private void CB_LangList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-            => Localization.Update(CB_LangList.SelectedIndex);
+        private void CB_LanguageSwitcher_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            => Localization.Update(CB_LanguageSwitcher.SelectedIndex);
 
         #endregion
 
         #region 查詢方法
-        // 由輸入的名稱做搜尋
+
         private void SearchByName()
         {
-            string inString = TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text);
+            string inString = TB_ServerSearchBox.Dispatcher.Invoke(() => TB_ServerSearchBox.Text);
 
             if (inString.Length > 1)
                 ServerQuery.ListSearch(inString);
-            else if (TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.Text == string.Empty))
+            else if (TB_ServerSearchBox.Dispatcher.Invoke(() => TB_ServerSearchBox.Text == string.Empty))
                 ServerQuery.arkSvCollection.Clear();
 
-            DG_ServerList.Dispatcher.Invoke(() => DG_ServerList.ItemsSource = ArkServerCollection.collection);
+            DG_ServerSearchResultArea.Dispatcher.Invoke(() => DG_ServerSearchResultArea.ItemsSource = ArkServerCollection.collection);
         }
 
-        // 搜尋所有伺服器
         private void SearchByAll()
         {
-            IsSearching(true);
+            UpdateSearchingStatus(true);
 
             ServerQuery.ListSearch(string.Empty);
-            DG_ServerList.Dispatcher.Invoke(() => DG_ServerList.ItemsSource = ArkServerCollection.collection);
 
-            IsSearching(false);
+            DG_ServerSearchResultArea.Dispatcher.Invoke(() => DG_ServerSearchResultArea.ItemsSource = ArkServerCollection.collection);
+
+            UpdateSearchingStatus(false);
         }
 
         #endregion
 
         #region 伺服器清單
-        // 加入伺服器
+
         private void JoinServer(object sender, RoutedEventArgs e)
         {
             object serverInfoObject = ((Button)sender).CommandParameter;
 
-            Process.Start("steam://connect/" +
-                ((ServerInfo)serverInfoObject).ip + Convert.ToString(((ServerInfo)serverInfoObject).port));
+            Process.Start("steam://connect/"
+                + ((ServerInfo)serverInfoObject).ip 
+                + Convert.ToString(((ServerInfo)serverInfoObject).port));
         }
 
-        // 對搜尋狀態做按鈕的調整
-        private void IsSearching(bool newStatus)
+        private void UpdateSearchingStatus(bool newStatus)
         {
-            TB_ServerID.Dispatcher.Invoke(() => TB_ServerID.IsEnabled = !newStatus);
+            TB_ServerSearchBox.Dispatcher.Invoke(() => TB_ServerSearchBox.IsEnabled = !newStatus);
+
             B_Start_Load.Dispatcher.Invoke(() => B_Start_Load.IsEnabled = !newStatus);
+
             B_Stop_Load.Dispatcher.Invoke(() => B_Stop_Load.IsEnabled = newStatus);
         }
-
-        // 顯示最小化按鈕
-        private void ShowButton(bool show) => Min_button.Opacity = show ? 1 : 0;
 
         #endregion
 
         #region 伺服器人數即時監控浮動文字(watchdog)
 
         Watchdog watchdog;
-        private void InitWatchdog() => watchdog = new Watchdog();
+        private void InitializeWatchdog() => watchdog = new Watchdog();
 
-        // 對監控介面傳遞伺服器資訊
-        private void ToggleSpecificServerWatchStatus(object sender, RoutedEventArgs e)
+        private void B_UpdateServerMonitoringStatus_Click(object sender, RoutedEventArgs e)
         {
             object serverInfoObject = ((Button)sender).CommandParameter;
+
             watchdog.UpdateWatchList((ServerInfo)serverInfoObject);
         }
 
         #endregion
 
         #region 按鈕事件
-        private void ClickMin(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void B_Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
-        private void ClickExit(object sender, RoutedEventArgs e)
+        private void B_Close_Click(object sender, RoutedEventArgs e)
         {
             watchdog.Close();
+
             Close();
+
             Environment.Exit(Environment.ExitCode);
         }
 
         private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
 
-        private void ClickShowButton(object sender, MouseEventArgs e) => ShowButton(true);
-
-        private void ClickHideButton(object sender, MouseEventArgs e) => ShowButton(false);
-
         private Thread searchByName;
-        private void TB_ServerID_TextChanged(object sender, TextChangedEventArgs e)
+        private void TB_ServerSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (searchByName != null) searchByName.Abort();
+
             searchByName = new Thread(SearchByName);
             searchByName.Start();
         }
@@ -134,7 +135,8 @@ namespace ARKServerQuery
         private void ClickStopSearchAll(object sender, RoutedEventArgs e)
         {
             searchByAll.Abort();
-            IsSearching(false);
+
+            UpdateSearchingStatus(false);
         }
 
         private void ClickDisableAllWatch(object sender, RoutedEventArgs e) => watchdog.DisableAllWatch();
