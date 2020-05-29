@@ -8,12 +8,12 @@
         AllowsTransparency="True"
         Background="Transparent"
         Height="305.65"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip"
         Title=""
         Width="707.999"
         WindowStyle="None"
         >
-
+    
     <Grid Background="#FF63627A"
           Margin="0"
           MouseLeftButtonDown="ClickDrag"
@@ -52,30 +52,6 @@
 
         </WrapPanel>
 
-        <!-- 伺服器查詢 -->
-        <WrapPanel HorizontalAlignment="Center"
-                   Margin="0,0,0,200" 
-                   VerticalAlignment="Center" 
-                   >
-            
-            <Label Content="{DynamicResource InputServerNameLocalizedString}" 
-                   FontSize="18" 
-                   Foreground="White"
-                   />
-            
-            <TextBox x:Name="TB_ServerSearchBox"
-                     Background="Transparent"
-                     BorderBrush="White"
-                     FontSize="20"
-                     Foreground="White"
-                     SelectionBrush="White"
-                     TextChanged="TB_ServerSearchBox_TextChanged"
-                     TextWrapping="Wrap"
-                     Width="222"
-                     />
-            
-        </WrapPanel>
-
         <!-- 視窗操作 -->
         <WrapPanel HorizontalAlignment="Right"
                    Margin="0"
@@ -102,13 +78,43 @@
             
         </WrapPanel>
 
-        <!-- 伺服器列表 -->
-        <WrapPanel HorizontalAlignment="Center"
-                   Margin="0"
-                   Orientation="Vertical"
-                   VerticalAlignment="Center"
-                   >
+        <Grid Margin="0,50,0,50">
             
+            <Grid.RowDefinitions>
+                
+                <RowDefinition Height="50"/>
+                
+                <RowDefinition Height="*"/>
+                
+                <RowDefinition Height="50"/>
+                
+            </Grid.RowDefinitions>
+
+            <!-- 伺服器查詢 -->
+            <WrapPanel HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Grid.Row="0"
+                >
+                
+                <Label Content="{DynamicResource InputServerNameLocalizedString}" 
+                    FontSize="18" 
+                    Foreground="White"
+                    />
+
+                <TextBox x:Name="TB_ServerSearchBox"
+                        Background="Transparent"
+                        BorderBrush="White"
+                        FontSize="20"
+                        Foreground="White"
+                        SelectionBrush="White"
+                        TextChanged="TB_ServerSearchBox_TextChanged"
+                        TextWrapping="Wrap"
+                        Width="222"
+                        />
+                
+            </WrapPanel>
+
+            <!-- 伺服器列表 -->
             <DataGrid x:Name="DG_ServerSearchResultArea"
                       AutoGenerateColumns="False" 
                       Background="#00545374"
@@ -116,13 +122,12 @@
                       CanUserAddRows="false"
                       FontSize="16"
                       FontWeight="Bold"
-                      Foreground="Black" 
-                      Height="126"
-                      HorizontalAlignment="Center"
+                      Foreground="Black"
                       HorizontalGridLinesBrush="White"
-                      VerticalAlignment="Center"
+                      VerticalAlignment="Top"
                       VerticalGridLinesBrush="White"
                       Width="auto"
+                      Grid.Row="1" Margin="50,0" HorizontalAlignment="Center"
                       >
 
                 <DataGrid.Resources>
@@ -201,75 +206,72 @@
 
             </DataGrid>
             
-        </WrapPanel>
+            
+            <!-- 監控操作、查詢操作 -->
+            <WrapPanel HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"
+                       Grid.Row="2"
+                       >
 
-        
-        <!-- 監控操作、查詢操作 -->
-        <WrapPanel x:Name="WP_BottomButtonWarp"
-                   HorizontalAlignment="Center"
-                   Margin="0,237,0,0"
-                   VerticalAlignment="Top"
-                   >
+                <Button x:Name="B_WatchVisibility"
+                        Background="#00DDDDDD" 
+                        BorderBrush="White"
+                        Click="ClickWatchVisibility"
+                        Content="{DynamicResource HideWatchLocalizedString}"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Height="44"
+                        HorizontalAlignment="Center"
+                        Margin="0"
+                        Width="auto"
+                        />
 
-            <Button x:Name="B_WatchVisibility"
-                    Background="#00DDDDDD" 
-                    BorderBrush="White"
-                    Click="ClickWatchVisibility"
-                    Content="{DynamicResource HideWatchLocalizedString}"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Height="44"
-                    HorizontalAlignment="Center"
-                    Margin="0"
-                    Width="auto"
-                    />
+                <Button x:Name="B_DisableAllWatch"
+                        Background="#00DDDDDD" 
+                        BorderBrush="White"
+                        Click="ClickDisableAllWatch"
+                        Content="{DynamicResource CancelWatchLocalizedString}"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Height="44"
+                        HorizontalAlignment="Center"
+                        Margin="50,0,0,0"
+                        Width="auto"
+                        />
 
-            <Button x:Name="B_DisableAllWatch"
-                    Background="#00DDDDDD" 
-                    BorderBrush="White"
-                    Click="ClickDisableAllWatch"
-                    Content="{DynamicResource CancelWatchLocalizedString}"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Height="44"
-                    HorizontalAlignment="Center"
-                    Margin="50,0,0,0"
-                    Width="auto"
-                    />
+                <Button x:Name="B_Start_Load"
+                        Background="#00DDDDDD" 
+                        BorderBrush="White"
+                        Click="ClickStartSearchAll"
+                        Content="{DynamicResource SearchAllLocalizedString}"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Height="44"
+                        HorizontalAlignment="Center"
+                        Margin="50,0,0,0"
+                        Width="auto"
+                        />
 
-            <Button x:Name="B_Start_Load"
-                    Background="#00DDDDDD" 
-                    BorderBrush="White"
-                    Click="ClickStartSearchAll"
-                    Content="{DynamicResource SearchAllLocalizedString}"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Height="44"
-                    HorizontalAlignment="Center"
-                    Margin="50,0,0,0"
-                    Width="auto"
-                    />
+                <Button x:Name="B_Stop_Load"
+                        Background="#00DDDDDD" 
+                        BorderBrush="White"
+                        Click="ClickStopSearchAll"
+                        Content="{DynamicResource SearchStopLocalizedString}"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Height="44"
+                        HorizontalAlignment="Center"
+                        IsEnabled="False"
+                        Margin="50,0,0,0"
+                        Width="auto"
+                        />
 
-            <Button x:Name="B_Stop_Load"
-                    Background="#00DDDDDD" 
-                    BorderBrush="White"
-                    Click="ClickStopSearchAll"
-                    Content="{DynamicResource SearchStopLocalizedString}"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Height="44"
-                    HorizontalAlignment="Center"
-                    IsEnabled="False"
-                    Margin="50,0,0,0"
-                    Width="auto"
-                    />
-
-        </WrapPanel>
-        
+            </WrapPanel>
+        </Grid>
     </Grid>
     
 </Window>
