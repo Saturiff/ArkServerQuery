@@ -39,14 +39,11 @@
                       Width="92"
                       >
                 
-                <ComboBoxItem Content="繁體中文"
-                              />
+                <ComboBoxItem Content="繁體中文"/>
                 
-                <ComboBoxItem Content="简体中文"
-                              />
+                <ComboBoxItem Content="简体中文"/>
                 
-                <ComboBoxItem Content="English"
-                              />
+                <ComboBoxItem Content="English"/>
                 
             </ComboBox>
 
@@ -123,11 +120,13 @@
                       FontSize="16"
                       FontWeight="Bold"
                       Foreground="Black"
+                      HorizontalAlignment="Center"
                       HorizontalGridLinesBrush="White"
+                      Margin="50,0"
                       VerticalAlignment="Top"
                       VerticalGridLinesBrush="White"
                       Width="auto"
-                      Grid.Row="1" Margin="50,0" HorizontalAlignment="Center"
+                      Grid.Row="1"
                       >
 
                 <DataGrid.Resources>
@@ -206,7 +205,6 @@
 
             </DataGrid>
             
-            
             <!-- 監控操作、查詢操作 -->
             <WrapPanel HorizontalAlignment="Center"
                        VerticalAlignment="Bottom"
@@ -271,7 +269,9 @@
                         />
 
             </WrapPanel>
+            
         </Grid>
+        
     </Grid>
     
 </Window>

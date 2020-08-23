@@ -33,6 +33,7 @@ namespace ARKServerQuery
         #endregion
 
         #region 鍵盤綁定
+
         // Hook全域鍵盤，在該視窗重新渲染時執行
         private void CompositionTarget_Rendering(object sender, EventArgs e)
             => windowManipulateComponent.KeyDetect();
