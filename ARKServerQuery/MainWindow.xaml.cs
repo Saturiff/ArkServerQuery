@@ -16,11 +16,25 @@ namespace ARKServerQuery
         {
             InitializeComponent();
 
+            StateChanged += ChangeWindowState;
+
             InitializeLocalization();
 
             ServerQuery.InitializeServerList();
 
             InitializeWatchdog();
+        }
+
+        private void ChangeWindowState(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                B_Normal.IsEnabled = true;
+            }
+            else
+            {
+                B_Normal.IsEnabled = false;
+            }
         }
 
         #region 本地化
@@ -73,7 +87,7 @@ namespace ARKServerQuery
             object serverInfoObject = ((Button)sender).CommandParameter;
 
             Process.Start("steam://connect/"
-                + ((ServerInfo)serverInfoObject).ip 
+                + ((ServerInfo)serverInfoObject).ip
                 + Convert.ToString(((ServerInfo)serverInfoObject).port));
         }
 
@@ -104,9 +118,21 @@ namespace ARKServerQuery
 
         #region 按鈕事件
 
-        private void B_Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void ClickMinimize(object sender, RoutedEventArgs e)
+        {
 
-        private void B_Close_Click(object sender, RoutedEventArgs e)
+            WindowState = WindowState.Minimized;
+
+        }
+
+        private void ClickNormal(object sender, RoutedEventArgs e)
+        {
+
+            WindowState = WindowState.Normal;
+
+        }
+
+        private void ClickClose(object sender, RoutedEventArgs e)
         {
             watchdog.Close();
 
@@ -115,7 +141,17 @@ namespace ARKServerQuery
             Environment.Exit(Environment.ExitCode);
         }
 
-        private void ClickDrag(object sender, MouseButtonEventArgs e) => DragMove();
+        private void ClickDrag(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                WindowState = WindowState.Normal;
+            }
+            else
+            {
+                DragMove();
+            }
+        }
 
         private Thread searchByName;
         private void TB_ServerSearchBox_TextChanged(object sender, TextChangedEventArgs e)

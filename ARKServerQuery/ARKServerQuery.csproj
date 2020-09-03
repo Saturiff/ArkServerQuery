@@ -59,7 +59,7 @@
     <ApplicationIcon>70-70.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>F335AA14FB4C2AA77E025023A506B989CEACFB81</ManifestCertificateThumbprint>

@@ -57,16 +57,26 @@
             
             <Button x:Name="B_Minimize"
                     Background="#02FFFFFF"
-                    Click="B_Minimize_Click"
+                    Click="ClickMinimize"
                     Content="—"
                     Foreground="#FF9B9B9B"
                     Height="20"
                     Width="20"
                     />
             
+            <Button x:Name="B_Normal"
+                    Background="#02FFFFFF"
+                    Click="ClickNormal"
+                    Content="口"
+                    IsEnabled="False"
+                    Foreground="#FF9B9B9B"
+                    Height="20"
+                    Width="20"
+                    />
+
             <Button x:Name="B_Close"
                     Background="#02FFFFFF"
-                    Click="B_Close_Click"
+                    Click="ClickClose"
                     Content="X"
                     Foreground="#FF9B9B9B"
                     Height="20"
