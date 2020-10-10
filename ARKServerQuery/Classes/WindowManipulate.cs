@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ARKServerQuery.Classes
+namespace ArkServerQuery.Classes
 {
     public class WindowManipulate
     {

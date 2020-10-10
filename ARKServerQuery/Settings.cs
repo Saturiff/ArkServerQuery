@@ -1,4 +1,4 @@
-﻿namespace ARKServerQuery.Properties
+﻿namespace ArkServerQuery.Properties
 {
     
     

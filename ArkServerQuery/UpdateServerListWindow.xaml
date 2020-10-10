@@ -1,0 +1,23 @@
+﻿<Window x:Class="ArkServerQuery.UpdateServerListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArkServerQuery"
+        mc:Ignorable="d"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Height="305.65"
+        ResizeMode="CanResizeWithGrip"
+        Title=""
+        Width="707.999"
+        WindowStyle="None"
+        >
+
+    <Grid Background="#FF63627A"
+          Margin="0"
+          >
+          <!--MouseLeftButtonDown="ClickDrag"-->
+
+    </Grid>
+</Window>

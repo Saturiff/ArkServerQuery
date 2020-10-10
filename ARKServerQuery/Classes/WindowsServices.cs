@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ARKServerQuery
+namespace ArkServerQuery.Classes
 {
     // 讓使用者的滑鼠無視監控標籤
     public static class WindowsServices
@@ -22,7 +22,7 @@ namespace ARKServerQuery
 
         public static void SetWindowExTransparent(IntPtr hwnd)
         {
-            SetWindowLong(hwnd, GWL_EXSTYLE, (isA) ? oriStyle : transparentStyle);
+            SetWindowLong(hwnd, GWL_EXSTYLE, isA ? oriStyle : transparentStyle);
 
             isA = !isA;
         }

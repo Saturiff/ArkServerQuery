@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace ARKServerQuery
+namespace ArkServerQuery.Classes
 {
     // 表格標題欄無法更新的解決方案 https://thomaslevesque.com/2011/03/21/wpf-how-to-bind-to-data-when-the-datacontext-is-not-inherited/
     public class BindingProxy : Freezable

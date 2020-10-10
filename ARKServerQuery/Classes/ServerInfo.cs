@@ -1,4 +1,4 @@
-﻿namespace ARKServerQuery
+﻿namespace ArkServerQuery.Classes
 {
     public class ServerInfo
     {

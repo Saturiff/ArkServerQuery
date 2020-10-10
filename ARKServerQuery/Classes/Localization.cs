@@ -1,10 +1,10 @@
-﻿using ARKServerQuery.Properties;
+﻿using ArkServerQuery.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace ARKServerQuery.Classes
+namespace ArkServerQuery.Classes
 {
     public static class Localization
     {

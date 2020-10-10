@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARKServerQuery", "ARKServerQuery\ARKServerQuery.csproj", "{5CD52B01-44D3-4986-A35E-F8B5A1C82632}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArkServerQuery", "ArkServerQuery\ArkServerQuery.csproj", "{5CD52B01-44D3-4986-A35E-F8B5A1C82632}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C8ABDC1F-6AD6-4C50-9F1A-9C06DE72555F} = {C8ABDC1F-6AD6-4C50-9F1A-9C06DE72555F}
 	EndProjectSection

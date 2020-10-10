@@ -10,14 +10,13 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using Timer = System.Windows.Forms.Timer;
 
-namespace ARKServerQuery
+namespace ArkServerQuery.Classes
 {
     // ServerLabel 繼承自 Label ，實例化時即可用來保存伺服器資訊
     // 建構子必要參數:
-    // WatchString -> 由查詢介面接收而來的伺服器字串，預設格式為 " IP:PORT,伺服器名稱 "
     // ClickDrag   -> 拖曳視窗事件
     // ChangeSize  -> 改變文字大小事件
-    // gFontSize   -> 欲顯示的文字大小
+    // fontSize    -> 欲顯示的文字大小
     // ----------------------------------------------------------------------
     // 流程:
     // 實例化 GameServer 嘗試訪問目標伺服器

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace ARKServerQuery
+namespace ArkServerQuery
 {
     /// <summary>
     /// App.xaml 的互動邏輯

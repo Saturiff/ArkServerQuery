@@ -1,7 +1,7 @@
-﻿<Application x:Class="ARKServerQuery.App"
+﻿<Application x:Class="ArkServerQuery.Classes.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ARKServerQuery"
+             xmlns:local="clr-namespace:ArkServerQuery"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>

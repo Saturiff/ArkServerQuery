@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5CD52B01-44D3-4986-A35E-F8B5A1C82632}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ARKServerQuery</RootNamespace>
-    <AssemblyName>ARKServerQuery</AssemblyName>
+    <RootNamespace>ArkServerQuery</RootNamespace>
+    <AssemblyName>ArkServerQuery</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -15,7 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>E:\File\ark\ARK Server Query\</PublishUrl>
+    <PublishUrl>E:\File\ark\Ark Server Query\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -74,7 +74,7 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>ARKServerQuery_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>ArkServerQuery_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -103,10 +103,14 @@
     <Compile Include="Classes\BindingProxy.cs" />
     <Compile Include="Classes\Localization.cs" />
     <Compile Include="Classes\ServerInfo.cs" />
+    <Compile Include="Classes\Verification.cs" />
     <Compile Include="Classes\WindowManipulate.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Classes\ServerLabel.cs" />
     <Compile Include="Classes\WindowsServices.cs" />
+    <Compile Include="UpdateServerListWindow.xaml.cs">
+      <DependentUpon>UpdateServerListWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Watchdog.xaml.cs">
       <DependentUpon>Watchdog.xaml</DependentUpon>
     </Compile>
@@ -135,6 +139,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UpdateServerListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Watchdog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

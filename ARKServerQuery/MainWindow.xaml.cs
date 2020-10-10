@@ -1,13 +1,14 @@
-﻿using ARKServerQuery.Properties;
+﻿using ArkServerQuery.Classes;
+using ArkServerQuery.Properties;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Localization = ARKServerQuery.Classes.Localization;
+using Localization = ArkServerQuery.Classes.Localization;
 
-namespace ARKServerQuery
+namespace ArkServerQuery
 {
     // 查詢介面
     public partial class MainWindow : Window
@@ -87,8 +88,8 @@ namespace ARKServerQuery
             object serverInfoObject = ((Button)sender).CommandParameter;
 
             Process.Start("steam://connect/"
-                + ((ServerInfo)serverInfoObject).ip
-                + Convert.ToString(((ServerInfo)serverInfoObject).port));
+                + ((ServerInfo)serverInfoObject).ip + ":"
+                + ((ServerInfo)serverInfoObject).port.ToString());
         }
 
         private void UpdateSearchingStatus(bool newStatus)
@@ -118,19 +119,9 @@ namespace ARKServerQuery
 
         #region 按鈕事件
 
-        private void ClickMinimize(object sender, RoutedEventArgs e)
-        {
+        private void ClickMinimize(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
-            WindowState = WindowState.Minimized;
-
-        }
-
-        private void ClickNormal(object sender, RoutedEventArgs e)
-        {
-
-            WindowState = WindowState.Normal;
-
-        }
+        private void ClickNormal(object sender, RoutedEventArgs e) => WindowState = WindowState.Normal;
 
         private void ClickClose(object sender, RoutedEventArgs e)
         {

@@ -1,8 +1,8 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ARKServerQuery.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ArkServerQuery.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="customLanguage" Type="ARKServerQuery.Classes.Localization.LanguageList" Scope="User">
+    <Setting Name="customLanguage" Type="ArkServerQuery.Classes.Localization.LanguageList" Scope="User">
       <Value Profile="(Default)">zh_tw</Value>
     </Setting>
   </Settings>

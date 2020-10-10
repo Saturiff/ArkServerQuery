@@ -1,19 +1,53 @@
-﻿using SourceQuery;
-using System;
+﻿using ArkServerQuery.Classes;
+using SourceQuery;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Windows;
 
-namespace ServerListGen
+namespace ArkServerQuery
 {
-    class MainProgram
+    public partial class UpdateServerListWindow : Window
     {
-        static void Main(string[] args)
+        // 更新:
+        // 自動更新=陣列A
+        // 使用者新增=陣列B
+        // 更新結果=A+B
+
+        // 查詢:
+        // 可對使用者所新增的陣列B做修改
+        public UpdateServerListWindow()
         {
-            Console.WriteLine("該專案用於生成最新的官服列表，大約需要半分鐘的時間..案下Enter開始");
-            Console.Read();
-            
+            InitializeComponent();
+
+            Initialize();
+        }
+
+        // 有必要?
+        ~UpdateServerListWindow()
+        {
+            officialCollection.Clear();
+            customCollection.Clear();
+        }
+
+        // 讀取目前 ServerQuery.arkSvCollection 內容
+        // 如何拆分custom?
+        private void Initialize()
+        {
+
+        }
+
+
+        // ClickUpdate()
+        // -> Disable other button 
+        // -> UpdateOfficialServerList() 
+        // -> Enable other button
+
+        // 更新
+        // 讀取原先
+        private void UpdateOfficialServerList()
+        {
             int[] port = new int[] { 27010, 27013, 27015, 27017, 27019, 27021, 27023, 27025, 27028, 27031 };
 
             // 取得伺服器IP列表
@@ -38,20 +72,13 @@ namespace ServerListGen
                     searchThread.Start();
                 }
             }
-            Thread.Sleep(1000);
-            Console.WriteLine("寫入檔案...");
+            Thread.Sleep(1000); // FIX?
             using (StreamWriter sw = new StreamWriter("ServerList.txt")) svList.ForEach(_sv => sw.Write(_sv));
             sr.Close();
-            Console.WriteLine("\n-- 清單創建完成 --");
-
-            Console.ReadLine();
         }
 
-        private static List<string> svList = new List<string>();
-        // private static void SearchServerInfo(string onlyIP, string p)
-        private static void SearchServerInfo(string onlyIP, int p)
+        private void SearchServerInfo(string onlyIP, int p)
         {
-            Console.WriteLine("only ip = {0}, port = {1}", onlyIP, p);
             GameServer sv = new GameServer();
             try
             {
@@ -60,7 +87,7 @@ namespace ServerListGen
                 string name = sv.name;
 
                 // 篩選不需要的伺服器種類後新增
-                if ( !(name.Contains("PVE")
+                if (!(name.Contains("PVE")
                     || name.Contains("Tek")
                     || name.Contains("Raid")
                     || name.Contains("Small")
@@ -76,5 +103,42 @@ namespace ServerListGen
             }
             catch { }
         }
+
+        private void GenerateFullServerList()
+        {
+
+        }
+
+        // 新增
+        // 輸入IP, Port
+        // 判斷是否與兩集合重複
+        // 加入至custom
+        private void AddServerToCustomCollection()
+        {
+
+        }
+
+        // 修改
+        private void EditServerCustomCollection()
+        {
+
+        }
+
+        // 刪除
+        private void DeleteServerFromCustomCollection()
+        {
+
+        }
+
+
+
+        private static List<string> svList = new List<string>();
+
+        // 方舟官方 officialserver.ini
+        private ArkServerCollection officialCollection = new ArkServerCollection();
+
+        // 玩家新增
+        private ArkServerCollection customCollection = new ArkServerCollection();
+
     }
 }

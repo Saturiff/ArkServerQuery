@@ -1,4 +1,4 @@
-﻿using ARKServerQuery.Classes;
+﻿using ArkServerQuery.Classes;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-namespace ARKServerQuery
+namespace ArkServerQuery
 {
     // 監控介面
     public partial class Watchdog : Window
