@@ -1,6 +1,6 @@
 # ArkServerQuery 方舟伺服器查詢
 ### Screenshot
-![Executing screenshot](/img/program_execute_window.PNG)  
+![Executing screenshot](/img/program_execute_window.png)  
 
 ### Solution information
 ![Solution description image](/img/ArkServerQueryProjectGraph.png)  
