@@ -1,7 +1,9 @@
 # ArkServerQuery 方舟伺服器查詢
-專案關係圖
-![專案關係_zh](/img/專案關係_zh.PNG)
-![專案關係_en](/img/專案關係_en.PNG)
+### Screenshot
+![Executing screenshot](/img/program_execute_window.PNG)  
+
+### Solution information
+![Solution description image](/img/ArkServerQueryProjectGraph.png)  
 
 |專案|註解|
 |:-------------:|-------------|
